@@ -1,7 +1,11 @@
+import Map from "../../containers/Map";
 import BarGraph from "../BarGraph";
 
 const Content = () => (
-    <BarGraph/>
+    <>
+        <Map/>
+        <BarGraph/>
+    </>
 );
 
 export default Content;
