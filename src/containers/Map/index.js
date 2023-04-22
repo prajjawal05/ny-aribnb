@@ -11,10 +11,10 @@ const Map = ({ onSelect }) => {
 
     useEffect(() => {
         const projection = d3.geoAlbers()
-        .center([0, 40.71])
+        .center([0, 40.66])
         .rotate([74, 0])
         .parallels([38, 42])
-        .scale(70000)
+        .scale(50000)
         .translate([500 / 2, 500 / 2]);
 
         const path = d3.geoPath()
