@@ -2,12 +2,29 @@ import Map from "../../containers/Map";
 import BarGraph from "../BarGraph";
 import ScatterPlot from "../ScatterPlot";
 
-const Content = () => (
-    <>
-        {/* <Map/> */}
+import { StyledUpperLayout, StyledLowerLayout, StyledContent } from "./style";
+
+
+const UpperLayout = () => (
+    <StyledUpperLayout>
+        <Map/>
         <ScatterPlot/>
-        <BarGraph/>
-    </>
+    </StyledUpperLayout>
 );
+
+const LowerLayout = () => (
+    <StyledLowerLayout>
+        <BarGraph/>
+    </StyledLowerLayout>
+);
+
+const Content = () => (
+    <StyledContent>
+        <UpperLayout/>
+        <LowerLayout/>
+    </StyledContent>
+);
+
+
 
 export default Content;
