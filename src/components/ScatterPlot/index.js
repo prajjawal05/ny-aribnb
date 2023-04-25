@@ -61,7 +61,7 @@ var renderPlot = () => {
         .append("circle")
         .attr("cx", data => xScale(data.xLabelValue))
         .attr("cy", data => yScale(data.yLabelValue))
-        .attr("r", 2)
+        .attr("r", 3.5)
         .attr("fill", "#ff5959");
 };
 
