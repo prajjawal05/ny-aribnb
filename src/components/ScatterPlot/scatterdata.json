@@ -1,16 +1,108 @@
 {
-    "graphData":[{"price":10,"review":4},
-    {"price":20,"review":1},
-    {"price":15,"review":5},
-    {"price":8,"review":6},
-    {"price":12,"review":9},
-    {"price":14,"review":8},
-    {"price":23,"review":3},
-    {"price":22,"review":10},
-    {"price":17,"review":11},
-    {"price":11,"review":4},
-    {"price":18,"review":3},
-    {"price":9,"review":8},
-    {"price":19,"review":9}
+    "graphData": [
+        {
+            "price": 10,
+            "review": 4,
+            "rating": 3,
+            "roomType": "Entire home/apt",
+            "instantbookable": "TRUE",
+            "availability": "223"
+        },
+        {
+            "price": 20,
+            "review": 1,
+            "rating": 5,
+            "roomType": "Hotel room",
+            "instantbookable": "FALSE",
+            "availability": "231"
+        },
+        {
+            "price": 15,
+            "review": 5,
+            "rating": 6,
+            "roomType": "Private room",
+            "instantbookable": "FALSE",
+            "availability": "112"
+        },
+        {
+            "price": 8,
+            "review": 6,
+            "rating": 4,
+            "roomType": "Shared room",
+            "instantbookable": "TRUE",
+            "availability": "65"
+        },
+        {
+            "price": 12,
+            "review": 9,
+            "rating": 3,
+            "roomType": "Hotel room",
+            "instantbookable": "TRUE",
+            "availability": "92"
+        },
+        {
+            "price": 14,
+            "review": 8,
+            "rating": 2,
+            "roomType": "Entire home/apt",
+            "instantbookable": "FALSE",
+            "availability": "151"
+        },
+        {
+            "price": 23,
+            "review": 3,
+            "rating": 2,
+            "roomType": "Entire home/apt",
+            "instantbookable": "TRUE",
+            "availability": "241"
+        },
+        {
+            "price": 22,
+            "review": 10,
+            "rating": 1,
+            "roomType": "Entire home/apt",
+            "instantbookable": "FALSE",
+            "availability": "54"
+        },
+        {
+            "price": 17,
+            "review": 11,
+            "rating": 3,
+            "roomType": "Private room",
+            "instantbookable": "TRUE",
+            "availability": "93"
+        },
+        {
+            "price": 11,
+            "review": 4,
+            "rating": 2,
+            "roomType": "Hotel room",
+            "instantbookable": "FALSE",
+            "availability": "120"
+        },
+        {
+            "price": 18,
+            "review": 3,
+            "rating": 5,
+            "roomType": "Private room",
+            "instantbookable": "TRUE",
+            "availability": "215"
+        },
+        {
+            "price": 9,
+            "review": 8,
+            "rating": 1,
+            "roomType": "Shared room",
+            "instantbookable": "FALSE",
+            "availability": "226"
+        },
+        {
+            "price": 19,
+            "review": 9,
+            "rating": 3,
+            "roomType": "Entire home/apt",
+            "instantbookable": "TRUE",
+            "availability": "320"
+        }
     ]
 }

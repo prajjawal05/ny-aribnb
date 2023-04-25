@@ -7,21 +7,21 @@ import { StyledUpperLayout, StyledLowerLayout, StyledContent } from "./style";
 
 const UpperLayout = () => (
     <StyledUpperLayout>
-        <Map/>
-        <ScatterPlot/>
+        <Map />
+        <ScatterPlot />
     </StyledUpperLayout>
 );
 
 const LowerLayout = () => (
     <StyledLowerLayout>
-        <BarGraph/>
+        <BarGraph />
     </StyledLowerLayout>
 );
 
 const Content = () => (
     <StyledContent>
-        <UpperLayout/>
-        <LowerLayout/>
+        <UpperLayout />
+        <LowerLayout />
     </StyledContent>
 );
 
