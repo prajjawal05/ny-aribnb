@@ -42,7 +42,7 @@ const Map = ({ onSelect }) => {
 
     return (
         <StyledMap>
-            <svg id="nycmap" width="700" height="700" />
+            <svg id="nycmap" width="500" height="500" />
         </StyledMap>
     );
 };

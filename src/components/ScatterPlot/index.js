@@ -21,7 +21,7 @@ var renderPlot = () => {
     var selectedVariableY = "price";
     var scatterPlotData = [];
 
-    data.graphData.forEach(row => {
+    data.forEach(row => {
         let tempData = { "xLabelValue": row[selectedVariableX], "yLabelValue": row[selectedVariableY] };
         scatterPlotData.push(tempData);
     });
