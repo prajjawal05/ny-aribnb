@@ -13,19 +13,39 @@ const ScatterPlot = () => {
     );
 };
 
+const getColorScale = () => {
+    return d3.scaleSequential(d3.interpolateReds).domain([0, 4]);
+}
+
+var brushed = ({selection}) => {
+    // console.log(selection);
+}
+
 var renderPlot = () => {
     const svg = d3.select('#scatterplot');
     var margin = { top: 70, bottom: 70, left: 70, right: 70 };
+    // 350 is graph width and height
+    const brush = d3.brush()
+                    .extent( [ [margin.left, margin.top], [margin.left + 350, margin.top + 350] ] )
+                    .on("start brush end", brushed);
+                    
+    svg.call(brush);
 
     var selectedVariableX = "review";
     var selectedVariableY = "price";
     var scatterPlotData = [];
 
+    var minReviews = -200;
+    var maxReviews = 0;
+    var cancellationPolicyMap = { "strict":4, "moderate":3, "flexible":2 };
     data.forEach(row => {
-        let tempData = { "xLabelValue": row[selectedVariableX], "yLabelValue": row[selectedVariableY] };
+        minReviews = Math.min(minReviews,row["review"]);
+        maxReviews = Math.max(maxReviews,row["review"]);
+        let tempData = { "xLabelValue": row[selectedVariableX], "yLabelValue": row[selectedVariableY], "review": row["review"], "cancellation_policy": cancellationPolicyMap[row["cancellation_policy"]] };
         scatterPlotData.push(tempData);
     });
 
+    console.log(minReviews + " and " + maxReviews + " ");
 
     var xScale = d3.scaleLinear().range([0, 350]).domain([d3.min(scatterPlotData, function (d) { return d.xLabelValue }), d3.max(scatterPlotData, function (d) { return d.xLabelValue; })]).nice();
 
@@ -61,8 +81,8 @@ var renderPlot = () => {
         .append("circle")
         .attr("cx", data => xScale(data.xLabelValue))
         .attr("cy", data => yScale(data.yLabelValue))
-        .attr("r", 3.5)
-        .attr("fill", "#ff5959");
+        .attr("r", data => 15 * (data.review-minReviews)/(maxReviews-minReviews))
+        .attr("fill", data => getColorScale()(data.cancellation_policy));
 };
 
 export default ScatterPlot;

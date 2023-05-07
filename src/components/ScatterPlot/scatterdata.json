@@ -2,118 +2,131 @@
     {
         "boro_code": "1",
         "price": 10,
-        "review": 4,
+        "review": 400,
         "rating": 3,
         "roomType": "Entire home/apt",
         "instantbookable": "TRUE",
-        "availability": "223"
+        "availability": "223",
+        "cancellation_policy": "strict"
     },
     {
         "boro_code": "1",
         "price": 20,
-        "review": 1,
+        "review": 100,
         "rating": 5,
         "roomType": "Hotel room",
         "instantbookable": "FALSE",
-        "availability": "231"
+        "availability": "231",
+        "cancellation_policy": "flexible"
     },
     {
         "boro_code": "1",
         "price": 15,
-        "review": 5,
+        "review": 514,
         "rating": 6,
         "roomType": "Private room",
         "instantbookable": "FALSE",
-        "availability": "112"
+        "availability": "112",
+        "cancellation_policy": "strict"
     },
     {
         "boro_code": "3",
         "price": 8,
-        "review": 6,
+        "review": 621,
         "rating": 4,
         "roomType": "Shared room",
         "instantbookable": "TRUE",
-        "availability": "65"
+        "availability": "65",
+        "cancellation_policy": "strict"
     },
     {
         "boro_code": "2",
         "price": 12,
-        "review": 9,
+        "review": 569,
         "rating": 3,
         "roomType": "Hotel room",
         "instantbookable": "TRUE",
-        "availability": "92"
+        "availability": "92",
+        "cancellation_policy": "moderate"
     },
     {
         "boro_code": "2",
         "price": 14,
-        "review": 8,
+        "review": 781,
         "rating": 2,
         "roomType": "Entire home/apt",
         "instantbookable": "FALSE",
-        "availability": "151"
+        "availability": "151",
+        "cancellation_policy": "flexible"
     },
     {
         "boro_code": "1",
         "price": 23,
-        "review": 3,
+        "review": 139,
         "rating": 2,
         "roomType": "Entire home/apt",
         "instantbookable": "TRUE",
-        "availability": "241"
+        "availability": "241",
+        "cancellation_policy": "moderate"
     },
     {
         "boro_code": "4",
         "price": 22,
-        "review": 10,
+        "review": 310,
         "rating": 1,
         "roomType": "Entire home/apt",
         "instantbookable": "FALSE",
-        "availability": "54"
+        "availability": "54",
+        "cancellation_policy": "flexible"
     },
     {
         "boro_code": "4",
         "price": 17,
-        "review": 11,
+        "review": 611,
         "rating": 3,
         "roomType": "Private room",
         "instantbookable": "TRUE",
-        "availability": "93"
+        "availability": "93",
+        "cancellation_policy": "flexible"
     },
     {
         "boro_code": "4",
         "price": 11,
-        "review": 4,
+        "review": 814,
         "rating": 2,
         "roomType": "Hotel room",
         "instantbookable": "FALSE",
-        "availability": "120"
+        "availability": "120",
+        "cancellation_policy": "strict"
     },
     {
         "boro_code": "5",
         "price": 18,
-        "review": 3,
+        "review": 300,
         "rating": 5,
         "roomType": "Private room",
         "instantbookable": "TRUE",
-        "availability": "215"
+        "availability": "215",
+        "cancellation_policy": "moderate"
     },
     {
         "boro_code": "3",
         "price": 9,
-        "review": 8,
+        "review": 1000,
         "rating": 1,
         "roomType": "Shared room",
         "instantbookable": "FALSE",
-        "availability": "226"
+        "availability": "226",
+        "cancellation_policy": "strict"
     },
     {
         "boro_code": "1",
         "price": 19,
-        "review": 9,
+        "review": 900,
         "rating": 3,
         "roomType": "Entire home/apt",
         "instantbookable": "TRUE",
-        "availability": "320"
+        "availability": "320",
+        "cancellation_policy": "moderate"
     }
 ]
