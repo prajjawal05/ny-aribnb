@@ -1,5 +1,6 @@
 [
     {
+        "boro_code": "1",
         "price": 10,
         "review": 4,
         "rating": 3,
@@ -8,6 +9,7 @@
         "availability": "223"
     },
     {
+        "boro_code": "1",
         "price": 20,
         "review": 1,
         "rating": 5,
@@ -16,6 +18,7 @@
         "availability": "231"
     },
     {
+        "boro_code": "1",
         "price": 15,
         "review": 5,
         "rating": 6,
@@ -24,6 +27,7 @@
         "availability": "112"
     },
     {
+        "boro_code": "3",
         "price": 8,
         "review": 6,
         "rating": 4,
@@ -32,6 +36,7 @@
         "availability": "65"
     },
     {
+        "boro_code": "2",
         "price": 12,
         "review": 9,
         "rating": 3,
@@ -40,6 +45,7 @@
         "availability": "92"
     },
     {
+        "boro_code": "2",
         "price": 14,
         "review": 8,
         "rating": 2,
@@ -48,6 +54,7 @@
         "availability": "151"
     },
     {
+        "boro_code": "1",
         "price": 23,
         "review": 3,
         "rating": 2,
@@ -56,6 +63,7 @@
         "availability": "241"
     },
     {
+        "boro_code": "4",
         "price": 22,
         "review": 10,
         "rating": 1,
@@ -64,6 +72,7 @@
         "availability": "54"
     },
     {
+        "boro_code": "4",
         "price": 17,
         "review": 11,
         "rating": 3,
@@ -72,6 +81,7 @@
         "availability": "93"
     },
     {
+        "boro_code": "4",
         "price": 11,
         "review": 4,
         "rating": 2,
@@ -80,6 +90,7 @@
         "availability": "120"
     },
     {
+        "boro_code": "5",
         "price": 18,
         "review": 3,
         "rating": 5,
@@ -88,6 +99,7 @@
         "availability": "215"
     },
     {
+        "boro_code": "3",
         "price": 9,
         "review": 8,
         "rating": 1,
@@ -96,6 +108,7 @@
         "availability": "226"
     },
     {
+        "boro_code": "1",
         "price": 19,
         "review": 9,
         "rating": 3,

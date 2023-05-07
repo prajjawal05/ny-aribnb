@@ -3,12 +3,29 @@ import { useEffect, useState } from "react";
 
 import StyledMap from "./style";
 
-import allData from './boundaries.json';
+import boundaryData from './boundaries.json';
+import data from '../../components/ScatterPlot/scatterdata.json';
 
 const borroughs = ['Staten Island', 'Manhattan', 'Queens', 'Brooklyn', 'Bronx'];
-const data = {
-    ...allData,
-    features: allData.features.filter(({ properties: { boro_name } }) => borroughs.includes(boro_name)),
+const mapData = {
+    ...boundaryData,
+    features: boundaryData.features.filter(({ properties: { boro_name } }) => borroughs.includes(boro_name)),
+}
+
+const boroFreq = data.reduce(
+    (acc, d) => {
+        if (!acc[d.boro_code]) {
+            acc[d.boro_code] = 0;
+        }
+
+        acc[d.boro_code] = acc[d.boro_code] + 1;
+        return acc;
+    }, {});
+
+
+const getColorScale = () => {
+    return d3.scaleSequential(d3.interpolateReds)
+        .domain([0, d3.max(Object.values(boroFreq))]);
 }
 
 const renderMapSvg = () => {
@@ -26,11 +43,13 @@ const renderMapSvg = () => {
 
     svg.append("g")
         .selectAll("path")
-        .data(data.features)
+        .data(mapData.features)
         .enter()
         .append("path")
         .attr("d", path)
-        .attr("class", "borough");
+        .style("fill", function (d) {
+            return getColorScale()(boroFreq[d.properties.boro_code]);
+        });
 };
 
 const Map = ({ onSelect }) => {
