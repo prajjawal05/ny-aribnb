@@ -48,7 +48,7 @@ var renderGraph = () => {
     yLabel = "Frequency";
     xScale = d3.scaleBand().range([0, width]).padding(0.2);
     yScale = d3.scaleLinear().range([height, 0]).nice();
-    xScale.domain(graphData.map(function (d) { console.log(d); return d.key; }));
+    xScale.domain(graphData.map(function (d) { return d.key; }));
     yScale.domain([0, 25]);
 
     var xAxis = svg.append("g").classed("xAxis", true).attr("transform", "translate(" + margin.left + "," + (height + margin.top) + ")").call(d3.axisBottom(xScale));
