@@ -22,6 +22,7 @@ const boroFreq = data.reduce(
         return acc;
     }, {});
 
+console.log(boroFreq);
 
 const getColorScale = () => {
     return d3.scaleSequential(d3.interpolateReds)
@@ -48,6 +49,7 @@ const renderMapSvg = () => {
         .append("path")
         .attr("d", path)
         .style("fill", function (d) {
+            console.log(boroFreq[d.properties.boro_code]);
             return getColorScale()(boroFreq[d.properties.boro_code]);
         });
 };

@@ -62,7 +62,7 @@ function brushed(e, attributes, y_props_collection, data_path_group, brush_exten
 }
 
 const renderPcp = () => {
-    const attributes = ['price', 'review', 'rating'];
+    const attributes = ['price', 'number of reviews', 'review rate number'];
     const brush_extents = attributes.map(() => [0, 0]);
     var mid_drag_position = {};
     const svg = d3.select('#pcp');

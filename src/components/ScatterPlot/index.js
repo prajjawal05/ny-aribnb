@@ -17,7 +17,7 @@ const getColorScale = () => {
     return d3.scaleSequential(d3.interpolateReds).domain([0, 4]);
 }
 
-var brushed = ({selection}) => {
+var brushed = ({ selection }) => {
     // console.log(selection);
 }
 
@@ -26,22 +26,22 @@ var renderPlot = () => {
     var margin = { top: 70, bottom: 70, left: 70, right: 70 };
     // 350 is graph width and height
     const brush = d3.brush()
-                    .extent( [ [margin.left, margin.top], [margin.left + 350, margin.top + 350] ] )
-                    .on("start brush end", brushed);
-                    
+        .extent([[margin.left, margin.top], [margin.left + 350, margin.top + 350]])
+        .on("start brush end", brushed);
+
     svg.call(brush);
 
-    var selectedVariableX = "review";
+    var selectedVariableX = "number of reviews";
     var selectedVariableY = "price";
     var scatterPlotData = [];
 
-    var minReviews = -200;
+    var minReviews = 0;
     var maxReviews = 0;
-    var cancellationPolicyMap = { "strict":4, "moderate":3, "flexible":2 };
+    var cancellationPolicyMap = { "strict": 4, "moderate": 3, "flexible": 2 };
     data.forEach(row => {
-        minReviews = Math.min(minReviews,row["review"]);
-        maxReviews = Math.max(maxReviews,row["review"]);
-        let tempData = { "xLabelValue": row[selectedVariableX], "yLabelValue": row[selectedVariableY], "review": row["review"], "cancellation_policy": cancellationPolicyMap[row["cancellation_policy"]] };
+        minReviews = Math.min(minReviews, row["number of reviews"]);
+        maxReviews = Math.max(maxReviews, row["number of reviews"]);
+        let tempData = { "xLabelValue": row[selectedVariableX], "yLabelValue": row[selectedVariableY], "review": row["number of reviews"], "cancellation_policy": cancellationPolicyMap[row["cancellation_policy"]] };
         scatterPlotData.push(tempData);
     });
 
@@ -81,7 +81,9 @@ var renderPlot = () => {
         .append("circle")
         .attr("cx", data => xScale(data.xLabelValue))
         .attr("cy", data => yScale(data.yLabelValue))
-        .attr("r", data => 15 * (data.review-minReviews)/(maxReviews-minReviews))
+        .attr("r", data => {
+            return 15 * (data.review - minReviews) / (maxReviews - minReviews);
+        })
         .attr("fill", data => getColorScale()(data.cancellation_policy));
 };
 
