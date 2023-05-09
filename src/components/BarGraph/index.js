@@ -14,20 +14,31 @@ const BarGraph = () => {
 
 var createList = (data, selectedVariable) => {
     var freqMap = [];
-    var roomType = { "Entire home/apt": { "instant_count": 0, "non_instant_count": 0 }, "Hotel room": { "instant_count": 0, "non_instant_count": 0 }, "Private room": { "instant_count": 0, "non_instant_count": 0 }, "Shared room": { "instant_count": 0, "non_instant_count": 0 } };
+    var ranges = ["2003-07" , "2008-12", "2013-17", "2018-22"]
+    var yearRange = { "2003-07" : { "Entire_home_apt": 0, "Hotel_room": 0, "Private_room": 0, "Shared_room": 0 },
+    "2008-12" : { "Entire_home_apt": 0, "Hotel_room": 0, "Private_room": 0, "Shared_room": 0 },
+    "2013-17" : { "Entire_home_apt": 0, "Hotel_room": 0, "Private_room": 0, "Shared_room": 0 },
+    "2018-22" : { "Entire_home_apt": 0, "Hotel_room": 0, "Private_room": 0, "Shared_room": 0 }
+    };
     data.forEach(row => {
-        if (row['instant_bookable']) {
-            roomType[row[selectedVariable.name]].instant_count++;
+        if (row['room type'] === "Hotel room") {
+            yearRange[row[selectedVariable.name]].Hotel_room++;
+        }
+        else if (row['room type'] === "Private room") {
+            yearRange[row[selectedVariable.name]].Private_room++;
+        }
+        else if (row['room type'] === "Shared room") {
+            yearRange[row[selectedVariable.name]].Shared_room++;
         }
         else {
-            roomType[row[selectedVariable.name]].non_instant_count++;
+            yearRange[row[selectedVariable.name]].Entire_home_apt++;
         }
     });
-    console.log(roomType);
-    freqMap.push({ "key": "Entire home/apt", "instant_count": roomType["Entire home/apt"].instant_count, "non_instant_count": roomType["Entire home/apt"].non_instant_count });
-    freqMap.push({ "key": "Hotel room", "instant_count": roomType["Hotel room"].instant_count, "non_instant_count": roomType["Hotel room"].non_instant_count });
-    freqMap.push({ "key": "Private room", "instant_count": roomType["Private room"].instant_count, "non_instant_count": roomType["Private room"].non_instant_count });
-    freqMap.push({ "key": "Shared room", "instant_count": roomType["Shared room"].instant_count, "non_instant_count": roomType["Shared room"].non_instant_count });
+    // console.log(yearRange);
+    for(let range of ranges) {
+        freqMap.push({"key": range, "Entire_home_apt": yearRange[range].Entire_home_apt, "Hotel_room": yearRange[range].Hotel_room, "Private_room": yearRange[range].Private_room, "Shared_room": yearRange[range].Shared_room })
+    }
+    // console.log(freqMap);
     return freqMap
 }
 
@@ -37,7 +48,7 @@ var renderGraph = () => {
     var graph = svg.append("g").attr("transform", "translate(" + 100 + "," + 100 + ")");
     var margin = { top: 70, bottom: 70, left: 70, right: 70 };
     var width = 350, height = 350;
-    var selectedVariable = { "name": "room type" };
+    var selectedVariable = { "name": "year_range" };
     var graphData = createList(data, selectedVariable);
 
     var xScale = null, yScale = null;
@@ -49,10 +60,10 @@ var renderGraph = () => {
     xScale = d3.scaleBand().range([0, width]).padding(0.2);
     yScale = d3.scaleLinear().range([height, 0]).nice();
     xScale.domain(graphData.map(function (d) { return d.key; }));
-    yScale.domain([0, 25]);
+    yScale.domain([0, 700]);
 
-    var xAxis = svg.append("g").classed("xAxis", true).attr("transform", "translate(" + margin.left + "," + (height + margin.top) + ")").call(d3.axisBottom(xScale));
-    var yAxis = svg.append("g").classed("yAxis", true).attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    var xAxis = svg.append("g").classed("xAxis", true).style("color", "white").attr("transform", "translate(" + margin.left + "," + (height + margin.top) + ")").call(d3.axisBottom(xScale));
+    var yAxis = svg.append("g").classed("yAxis", true).style("color", "white").attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
     var funYAxis = d3.axisLeft(yScale);
     funYAxis(yAxis);
@@ -61,6 +72,7 @@ var renderGraph = () => {
         .attr("class", "x-axis-label")
         .attr("text-anchor", "end")
         .attr("x", width / 2.5)
+        .style("color", "white")
         .attr("y", height - margin.bottom + 15)
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("font-weight", "bold")
@@ -69,26 +81,27 @@ var renderGraph = () => {
     graph.append("text")
         .attr("class", "y-axis-label")
         .attr("text-anchor", "end")
+        .style("color", "white")
         .attr("transform", "rotate(-90)")
         .attr("y", -70)
         .attr("font-weight", "bold")
         .text(yLabel);
 
-    graph.append("text")
-        .attr("class", "top-axis-label")
-        .attr("text-anchor", "end")
-        .attr("x", width / 2)
-        .attr("y", -120)
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr("font-weight", "bold")
-        .text("Bar Graph of " + selectedVariable.name);
+    // graph.append("text")
+    //     .attr("class", "top-axis-label")
+    //     .attr("text-anchor", "end")
+    //     .attr("x", width / 2)
+    //     .attr("y", -120)
+    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    //     .attr("font-weight", "bold")
+    //     .text("Bar Graph of " + selectedVariable.name);
 
-    var stack = d3.stack().keys(["instant_count", "non_instant_count"]);
+    var stack = d3.stack().keys([ "Private_room", "Entire_home_apt", "Hotel_room", "Shared_room"]);
     var stackedData = stack(graphData);
-    console.log(stackedData);
+    // console.log(stackedData);
 
     var barGroup = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    var color = d3.scaleOrdinal().range(["#22a7f0", "#d21404"]);
+    var color = d3.scaleOrdinal().range(["#22a7f0", "#d21404", "f23e1c", "a4c2b5"]);
 
     barGroup.selectAll("g")
         .data(stackedData)

@@ -1,5 +1,5 @@
 import Map from "../../containers/Map";
-// import BarGraph from "../BarGraph";
+import BarGraph from "../BarGraph";
 import ScatterPlot from "../ScatterPlot";
 import Pcp from "../PcpGraph";
 import SunBurst from "../SunBurst";
@@ -16,6 +16,7 @@ const UpperLayout = () => (
 
 const LowerLayout = () => (
     <StyledLowerLayout>
+        <BarGraph />
         <SunBurst />
         <Pcp />
     </StyledLowerLayout>

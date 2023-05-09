@@ -13,6 +13,10 @@ const ScatterPlot = () => {
     );
 };
 
+const computeJitter = (bandwidth) => {
+    return bandwidth / 3 + Math.random() * ( 0.5 * bandwidth);
+}
+
 const getColorScale = () => {
     return d3.scaleSequential(d3.interpolateReds).domain([0, 4]);
 }
@@ -26,10 +30,10 @@ var renderPlot = () => {
     var margin = { top: 70, bottom: 70, left: 70, right: 70 };
 
     const brush = d3.brush()
-        .extent([[margin.left, margin.top], [margin.left + 350, margin.top + 350]])
+        .extent([[margin.left, margin.top], [margin.left + 450, margin.top + 350]])
         .on("start brush end", brushed);
 
-    svg.call(brush);
+    // svg.call(brush);
 
     var selectedVariableX = "review rate number";
     var selectedVariableY = "price";
@@ -44,10 +48,9 @@ var renderPlot = () => {
         "cancellation_policy": cancellationPolicyMap[row["cancellation_policy"]]
     }));
 
-    var xScale = d3.scaleLinear()
-        .range([0, 350])
-        .domain([0, 5])
-        .nice();
+    var xScale = d3.scaleBand()
+        .range([0, 450])
+        .domain([1,2,3,4,5]);
 
     var yScale = d3.scaleLinear().range([350, 0]).domain([
         d3.min(scatterPlotData, function (d) { return d.yLabelValue; }),
@@ -94,13 +97,28 @@ var renderPlot = () => {
         .data(scatterPlotData)
         .enter()
         .append("circle")
-        .attr("cx", data => xScale(data.xLabelValue))
+        .attr("cx", data => xScale(data.xLabelValue) + computeJitter(xScale.bandwidth()))
         .attr("cy", data => yScale(data.yLabelValue))
-        .attr("r", data => {
-            return data.review / 20;
-        })
+        .attr("r", data => { return data.review / 20; })
         .style("opacity", 0.5)
         .attr("fill", data => getColorScale()(data.cancellation_policy));
+
+    var rectWidth = 90;//gap between x ticks
+    var rectHeight = 350;//height
+
+    var rectGroup = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    rectGroup.selectAll("rect")
+          .data(scatterPlotData)
+          .enter()
+          .append("rect")
+          .attr("x", data => xScale(data.xLabelValue))
+          .attr("y", 0)
+          .attr("width", rectWidth)
+          .attr("height", rectHeight)
+          .attr("fill", "rgba(0,0,0,0.002)")
+          .attr("stroke", "white")
+          .attr("stroke-width", 0.7);
+
 };
 
 export default ScatterPlot;
