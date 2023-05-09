@@ -57,7 +57,8 @@ const renderMapSvg = (selectedRgns, onSelect) => {
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
-        .style("position", "absolute");
+        .style("position", "absolute")
+        .style("color", "white");
 
     const svg = d3.select('#nycmap');
     const svgPosRect = svg.node().getBoundingClientRect();

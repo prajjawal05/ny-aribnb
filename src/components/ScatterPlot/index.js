@@ -47,13 +47,26 @@ var renderPlot = () => {
 
     console.log(minReviews + " and " + maxReviews + " ");
 
-    var xScale = d3.scaleLinear().range([0, 350]).domain([d3.min(scatterPlotData, function (d) { return d.xLabelValue }), d3.max(scatterPlotData, function (d) { return d.xLabelValue; })]).nice();
+    var xScale = d3.scaleLinear()
+        .range([0, 350])
+        .domain([
+            d3.min(scatterPlotData, d => d.xLabelValue),
+            d3.max(scatterPlotData, d => d.xLabelValue)
+        ])
+        .nice();
 
     var yScale = d3.scaleLinear().range([350, 0]).domain([d3.min(scatterPlotData, function (d) { return d.yLabelValue; }), d3.max(scatterPlotData, function (d) { return d.yLabelValue; })]).nice();
 
+    var xAxis = svg.append("g")
+        .classed("xAxis", true)
+        .attr("transform", "translate(" + margin.left + "," + (350 + margin.top) + ")")
+        .style("color", "white")
+        .call(d3.axisBottom(xScale));
 
-    var xAxis = svg.append("g").classed("xAxis", true).attr("transform", "translate(" + margin.left + "," + (350 + margin.top) + ")").call(d3.axisBottom(xScale));
-    var yAxis = svg.append("g").classed("yAxis", true).attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    var yAxis = svg.append("g")
+        .classed("yAxis", true)
+        .style("color", "white")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var funYAxis = d3.axisLeft(yScale);
     funYAxis(yAxis);

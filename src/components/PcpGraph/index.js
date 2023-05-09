@@ -118,6 +118,7 @@ const renderPcp = () => {
         .append("g")
         .attr("transform", attribute => `translate(${x_props(attribute)})`)
         .attr("class", "attribute-group-item")
+
     // .call(d3.drag()
     //     .subject(function (attribute) { return { x_props: x_props(attribute) }; })
     //     .on("start", function (attribute) {
@@ -147,12 +148,21 @@ const renderPcp = () => {
     data_lines.append("g")
         .attr("class", "axis-group-item")
         .style("cursor", "move")
-        .each(function (attribute) { d3.select(this).call(d3.axisLeft().scale(y_props_collection[attribute])); })
+        .each(function (attribute) {
+            d3.select(this)
+                .call(d3.axisLeft()
+                    .scale(y_props_collection[attribute]))
+                .style("color", "white");
+        })
         .append("text")
         .attr("y", -margin.top / 2)
         .style("text-anchor", "middle")
-        .style("fill", "black")
+        .style("stroke", "white")
         .text(attribute => attribute);
+
+    data_lines.selectAll("g")
+        .select('path')
+        .style("stroke", "white");
 
     data_lines.append("g")
         .attr("class", "brush")
