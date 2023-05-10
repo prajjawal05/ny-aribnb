@@ -158,7 +158,6 @@ const SunBurst = () => {
             .on("mouseover", function (e, d) {
                 this.parentNode.appendChild(this);
                 tooltip.style("opacity", 1);
-                console.log(`${d.data.name} (${d.data.value})`);
                 tooltip.html(`${d.data.name} (${d.data.value})`);
 
                 tooltip.style("left", svgPosRect.right + WIDTH / 3 + "px")

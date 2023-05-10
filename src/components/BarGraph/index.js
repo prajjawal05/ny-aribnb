@@ -107,7 +107,10 @@ var renderGraph = () => {
         .attr("x", d => { return xScale(d.data.key); })
         .attr("y", d => { return yScale(d[1]); })
         .attr("width", xScale.bandwidth())
-        .attr("height", d => { return yScale(d[0]) - yScale(d[1]); });
+        .attr("height", d => { return yScale(d[0]) - yScale(d[1]); })
+        .on("mouseover", (e, d) => {
+            console.log(e, d);
+        });
 };
 
 export default BarGraph;

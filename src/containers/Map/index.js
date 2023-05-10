@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { useEffect, useState, useCallback } from "react";
 
 import StyledMap from "./style";
+import ReactDomServer from 'react-dom/server';
 
 import boundaryData from './boundaries.json';
 import data from '../../components/ScatterPlot/scatterdata.json';
@@ -58,7 +59,11 @@ const renderMapSvg = (selectedRgns, onSelect) => {
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("color", "white");
+        // .style("height", "100px")
+        // .style("width", "100px")
+        .style("color", "black")
+        .style("background-color", "white")
+        .style("font-size", "16px");
 
     const svg = d3.select('#nycmap');
     const svgPosRect = svg.node().getBoundingClientRect();
@@ -71,35 +76,42 @@ const renderMapSvg = (selectedRgns, onSelect) => {
         .attr("d", path)
         .style("fill", function (d) {
             if (isRegionSelected(d, selectedRgns)) {
-                return SELECTED_COLOR;
+                return HOVERED_SELECTED_COLOR;
             }
             return getColorScale()(boroFreq[getBoroughDataFromMap(d)]);
         })
+        .classed("selected", d => isRegionSelected(d, selectedRgns))
         .on("mouseover", function (event, d) {
             this.parentNode.appendChild(this);
 
             tooltip.style("opacity", 1);
-            tooltip.html(d.properties.boro_name);
+            tooltip.html(
+                ReactDomServer.renderToString(
+                    <div style={{ width: "100px", height: "50px", display: "flex", justifyContent: "center" }}>
+                        {d.properties.boro_name}
+                        <br />
+                        ({boroFreq[getBoroughDataFromMap(d)]})
+                    </div>
+                )
+            );
 
-            tooltip.style("left", svgPosRect.right - 30 + "px")
-                .style("top", svgPosRect.top + 50 + "px");
+            tooltip.style("left", event.x + 40 + "px")
+                .style("top", event.y + 40 + "px");
 
-            const fillColor = HOVERED_SELECTED_COLOR;
+            const fillColor = SELECTED_COLOR;
 
             d3.select(this)
                 .classed("highlighted", true)
                 // .attr("transform", "scale(1.2) translate(-35, -35)")
-                .attr("stroke-width", 2)
                 .style("fill", fillColor);
 
         })
         .on("mouseout", function (e, d) {
             tooltip.style("opacity", 0);
-            const fillColor = isRegionSelected(d, selectedRgns) ? SELECTED_COLOR : getColorScale()(boroFreq[getBoroughDataFromMap(d)]);
+            const fillColor = isRegionSelected(d, selectedRgns) ? HOVERED_SELECTED_COLOR : getColorScale()(boroFreq[getBoroughDataFromMap(d)]);
             d3.select(this)
                 .classed("highlighted", false)
                 .attr("transform", null)
-                .style("stroke-width", 1) // remove the highlighted class
                 .style("fill", fillColor);
         })
         .on("click", function (e, d) {

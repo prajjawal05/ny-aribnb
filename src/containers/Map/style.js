@@ -8,9 +8,14 @@ const StyledMap = styled.div`
 
     .highlighted {
         stroke: black;
-        stroke-width: 2px;
+        stroke-width: 3px;
         cursor: pointer;
         z-index: 10;
+    }
+
+    .selected {
+        stroke: black;
+        stroke-width: 2px;
     }
 `;
 
