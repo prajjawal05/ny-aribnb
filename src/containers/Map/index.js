@@ -12,7 +12,7 @@ const mapData = {
     features: boundaryData.features.filter(({ properties: { boro_name } }) => borroughs.includes(boro_name)),
 }
 
-const SELECTED_COLOR = '#C9CC3F';
+const SELECTED_COLOR = '#318CE7';
 const HOVERED_SELECTED_COLOR = '#C2B280';
 
 const getBoroughDataFromMap = d => d.properties.boro_code;
@@ -83,7 +83,8 @@ const renderMapSvg = (selectedRgns, onSelect) => {
 
             tooltip.style("left", svgPosRect.right - 30 + "px")
                 .style("top", svgPosRect.top + 50 + "px");
-            const fillColor = isRegionSelected(d, selectedRgns) ? HOVERED_SELECTED_COLOR : getHighlightedColorScale()(boroFreq[getBoroughDataFromMap(d)]);
+
+            const fillColor = HOVERED_SELECTED_COLOR;
 
             d3.select(this)
                 .classed("highlighted", true)
@@ -107,14 +108,17 @@ const renderMapSvg = (selectedRgns, onSelect) => {
 };
 
 const Map = ({ onSelect = () => undefined }) => {
-    const [selectedRegions, updateSelectedRegions] = useState([])
+    const [selectedRegions, updateSelectedRegions] = useState([]);
 
     const handleSelect = useCallback(rgn => {
-        updateSelectedRegions(selectedRgn => {
-            const newRgn = [...selectedRgn, rgn];
+        updateSelectedRegions(selectedRgns => {
+            let newRgn = [...selectedRgns];
+            if (newRgn.includes(rgn)) {
+                newRgn = newRgn.filter(r => r !== rgn);
+            } else {
+                newRgn.push(rgn);
+            }
             onSelect(newRgn);
-
-            console.log(newRgn);
             return newRgn;
         });
     });
