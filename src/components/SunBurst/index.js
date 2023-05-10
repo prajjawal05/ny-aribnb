@@ -150,10 +150,13 @@ const SunBurst = () => {
             .append("path")
             .attr("d", arc)
             .style("fill", (d) => {
-                if (d.depth === 0) {
-                    return 'black';
-                }
                 return getColorScale()(d.depth);
+            })
+            .style("opacity", (d) => {
+                if (d.depth === 0) {
+                    return 0;
+                }
+                return 1;
             })
             .on("mouseover", function (e, d) {
                 this.parentNode.appendChild(this);

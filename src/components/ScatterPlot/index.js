@@ -6,7 +6,7 @@ import data from "./scatterdata.json";
 import StyledSVG from "./style";
 
 const computeJitter = (bandwidth) => {
-    return bandwidth / 3 + Math.random() * (0.5 * bandwidth);
+    return bandwidth / 4 + Math.random() * (0.5 * bandwidth);
 }
 
 const getColorScale = () => {
