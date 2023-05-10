@@ -9,30 +9,22 @@ const ScatterPlot = () => {
     });
 
     return (
-        <svg id="scatterplot" width="700" height="700" />
+        <svg id="scatterplot" width="1000" height="850" />
     );
 };
 
 const computeJitter = (bandwidth) => {
-    return bandwidth / 3 + Math.random() * ( 0.5 * bandwidth);
+    return bandwidth / 3 + Math.random() * (0.5 * bandwidth);
 }
 
 const getColorScale = () => {
     return d3.scaleSequential(d3.interpolateReds).domain([0, 4]);
 }
 
-var brushed = ({ selection }) => {
-    // console.log(selection);
-}
-
 var renderPlot = () => {
     const svg = d3.select('#scatterplot');
     var margin = { top: 70, bottom: 70, left: 70, right: 70 };
-
-    const brush = d3.brush()
-        .extent([[margin.left, margin.top], [margin.left + 450, margin.top + 350]])
-        .on("start brush end", brushed);
-
+    var graph_width = 900, graph_height = 650;
     // svg.call(brush);
 
     var selectedVariableX = "review rate number";
@@ -49,46 +41,27 @@ var renderPlot = () => {
     }));
 
     var xScale = d3.scaleBand()
-        .range([0, 450])
-        .domain([1,2,3,4,5]);
+        .range([0, graph_width])
+        .domain([1, 2, 3, 4, 5]);
 
-    var yScale = d3.scaleLinear().range([350, 0]).domain([
+    var yScale = d3.scaleLinear().range([graph_height, 0]).domain([
         d3.min(scatterPlotData, function (d) { return d.yLabelValue; }),
         d3.max(scatterPlotData, function (d) { return d.yLabelValue; })]
     ).nice();
 
     var xAxis = svg.append("g")
         .classed("xAxis", true)
-        .attr("transform", "translate(" + margin.left + "," + (350 + margin.top) + ")")
+        .attr("transform", "translate(" + margin.left + "," + (graph_height + margin.top) + ")")
         .style("color", "white")
-        .call(d3.axisBottom(xScale));
+        .style("font-size", "16px");
 
     var yAxis = svg.append("g")
         .classed("yAxis", true)
         .style("color", "white")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var funYAxis = d3.axisLeft(yScale);
-    funYAxis(yAxis);
-
-    // svg.append("text")
-    //     .attr("class", "x-axis-label")
-    //     .attr("text-anchor", "end")
-    //     // .attr("x", 700 / 2.5)
-    //     // .attr("y", 400 - margin.bottom + 15)
-    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-    //     .attr("font-weight", "bold")
-    //     .style("color", "white")
-    //     .text(selectedVariableX);
-
-    // svg.append("text")
-    //     .attr("class", "y-axis-label")
-    //     .attr("text-anchor", "end")
-    //     .attr("transform", "rotate(-90)")
-    //     .attr("y", -10)
-    //     .attr("font-weight", "bold")
-    //     .style("color", "white")
-    //     .text(selectedVariableY);
+    d3.axisLeft(yScale)(yAxis);
+    d3.axisBottom(xScale)(xAxis);
 
     var pointGroup = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -103,21 +76,26 @@ var renderPlot = () => {
         .style("opacity", 0.5)
         .attr("fill", data => getColorScale()(data.cancellation_policy));
 
-    var rectWidth = 90;//gap between x ticks
-    var rectHeight = 350;//height
+    svg.selectAll("text")
+        .attr('font-size', 16);
 
-    var rectGroup = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    const rectWidth = xScale(2) - xScale(1);
+    const rectHeight = graph_height;//height
+
+    const rectGroup = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     rectGroup.selectAll("rect")
-          .data(scatterPlotData)
-          .enter()
-          .append("rect")
-          .attr("x", data => xScale(data.xLabelValue))
-          .attr("y", 0)
-          .attr("width", rectWidth)
-          .attr("height", rectHeight)
-          .attr("fill", "rgba(0,0,0,0.002)")
-          .attr("stroke", "white")
-          .attr("stroke-width", 0.7);
+        .data(scatterPlotData)
+        .enter()
+        .append("rect")
+        .attr("x", data => xScale(data.xLabelValue))
+        .attr("y", 0)
+        .attr("width", rectWidth)
+        .attr("height", rectHeight)
+        .attr("fill", "rgba(0,0,0,0.002)")
+        .attr("stroke", "white")
+        .attr("stroke-width", 0.7);
 
 };
 

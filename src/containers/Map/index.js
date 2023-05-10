@@ -47,8 +47,8 @@ const renderMapSvg = (selectedRgns, onSelect) => {
         .center([0, 40.66])
         .rotate([74, 0])
         .parallels([38, 42])
-        .scale(50000)
-        .translate([600 / 2, 600 / 2]);
+        .scale(90000)
+        .translate([1000 / 2, 950 / 2]);
 
     const path = d3.geoPath()
         .projection(projection);
@@ -125,7 +125,7 @@ const Map = ({ onSelect = () => undefined }) => {
 
     return (
         <StyledMap>
-            <svg id="nycmap" width="600" height="600" />
+            <svg id="nycmap" width="1000" height="850" />
         </StyledMap>
     );
 };

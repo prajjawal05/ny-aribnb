@@ -32,8 +32,8 @@ const addAngles = (parent, children) => {
 
 const level_map = {
     0: d => ({
-        name: _map_boro_code[d.boro_code],
-        property: d.boro_code
+        name: d.price_range,
+        property: d.price_range
     }),
     1: d => ({
         name: d.instant_bookable ? "Instant bookable" : "Not instant bookable",
@@ -125,9 +125,11 @@ const root = d3.hierarchy(graphDataV2)
 var tooltip = d3.select("body")
     .append("div")
     .attr("id", "sunId")
+    .classed("sunId", true)
     .style("opacity", 0)
     .style("position", "absolute")
-    .style('color', "white");
+    .style('color', "white")
+// .style('width', '200px');
 
 const SunBurst = () => {
     useEffect(() => {
@@ -156,7 +158,8 @@ const SunBurst = () => {
             .on("mouseover", function (e, d) {
                 this.parentNode.appendChild(this);
                 tooltip.style("opacity", 1);
-                tooltip.html(d.data.name + `(${d.data.value})`);
+                console.log(`${d.data.name} (${d.data.value})`);
+                tooltip.html(`${d.data.name} (${d.data.value})`);
 
                 tooltip.style("left", svgPosRect.right + WIDTH / 3 + "px")
                     .style("top", svgPosRect.top - HEIGHT / 2 + "px");

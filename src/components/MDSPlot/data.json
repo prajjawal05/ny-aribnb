@@ -1,0 +1,80 @@
+{
+    "nodes": [
+        {
+            "id": "Construction year",
+            "size": 5.0
+        },
+        {
+            "id": "price",
+            "size": 10.6612934115586
+        },
+        {
+            "id": "service fee",
+            "size": 10.662620337549114
+        },
+        {
+            "id": "minimum nights",
+            "size": 15.0
+        },
+        {
+            "id": "number of reviews",
+            "size": 5.618349818142643
+        },
+        {
+            "id": "availability 365",
+            "size": 11.650944404990133
+        }
+    ],
+    "links": [
+        {
+            "source": "minimum nights",
+            "target": "number of reviews",
+            "value": 1.3803239284843667
+        },
+        {
+            "source": "number of reviews",
+            "target": "availability 365",
+            "value": 1.375596102972299
+        },
+        {
+            "source": "Construction year",
+            "target": "number of reviews",
+            "value": 1.119974391334141
+        },
+        {
+            "source": "Construction year",
+            "target": "service fee",
+            "value": 1.112479604223352
+        },
+        {
+            "source": "Construction year",
+            "target": "price",
+            "value": 1.1123857777354111
+        },
+        {
+            "source": "Construction year",
+            "target": "minimum nights",
+            "value": 1.0392087197289235
+        },
+        {
+            "source": "service fee",
+            "target": "availability 365",
+            "value": 0.9756288775000264
+        },
+        {
+            "source": "price",
+            "target": "availability 365",
+            "value": 0.9755638105322688
+        },
+        {
+            "source": "service fee",
+            "target": "number of reviews",
+            "value": 0.760891237544135
+        },
+        {
+            "source": "price",
+            "target": "number of reviews",
+            "value": 0.7608375445525405
+        }
+    ]
+}
