@@ -103,6 +103,67 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
             onSelect(d);
         });
 
+    
+        const width = svg.attr("width");
+        const height = svg.attr("height");
+        
+        const defs = svg.append("defs");
+        
+        const gradient = defs.append("linearGradient")
+          .attr("id", "gradient")
+          .attr("x1", "0%")
+          .attr("y1", "0%")
+          .attr("x2", "0%")
+          .attr("y2", "100%");
+        
+        gradient.append("stop")
+          .attr("offset", "0%")
+          .attr("style", "stop-color:#970B13;stop-opacity:1");
+        
+        gradient.append("stop")
+          .attr("offset", "100%")
+          .attr("style", "stop-color:#FCAA8E;stop-opacity:1");
+        
+          const legendHeight = 120;
+          const legendWidth = 120;
+          const funnelHeight = 120;
+          const funnelWidth = 70;
+          
+        //   const pathData = `M0,${funnelHeight} L${(legendWidth - funnelHeight) / 2},0 L${(legendWidth + funnelHeight) / 2},0 L${legendWidth},${funnelHeight} L0,${funnelHeight}`;
+        const pathData = `M${legendWidth/2 - funnelWidth/2},${legendHeight - funnelHeight} ` +
+        `L${legendWidth/2 + funnelWidth/2},${legendHeight - funnelHeight} ` +
+        `L${legendWidth/2 + funnelWidth/4},${legendHeight} ` +
+        `L${legendWidth/2 - funnelWidth/4},${legendHeight} ` +
+        `L${legendWidth/2 - funnelWidth/2},${legendHeight - funnelHeight}`;
+        
+        const path = svg.append("path")
+          .attr("d", pathData)
+          .attr("fill", "url(#gradient)");
+        
+        const sizeLegendText = svg.append("text")
+          .attr("x", width / 2)
+          .attr("y", height / 2)
+          .attr("text-anchor", "middle")
+          .attr("font-size", "16")
+          .text("Size Legend")
+          .style("fill", "rgb(255,255,255");
+
+          const lowerText = svg.append("text")
+          .attr("x", width / 1.5)
+          .attr("y", height / 2)
+          .attr("text-anchor", "middle")
+          .attr("font-size", "16")
+          .text("1")
+          .style("fill", "rgb(255,255,255");
+
+          const upperText = svg.append("text")
+          .attr("x", width / 3)
+          .attr("y", height / 2)
+          .attr("text-anchor", "middle")
+          .attr("font-size", "16")
+          .text("5")
+          .style("fill", "rgb(255,255,255");
+      
 };
 
 
