@@ -150,7 +150,9 @@ var renderGraph = (svg, data, selections, onSelect) => {
 
     const colorSelected = d3.scaleOrdinal()
         .domain(ROOM_TYPES)
-        .range([d3.interpolateGreens(1), d3.interpolateGreens(0.75), d3.interpolateGreens(0.5), d3.interpolateGreens(0.25)]);
+        .range(["#4E6E81", "#070A52", "#6d06bd", "#e89a4a"]);
+    // const colorSelected = (_) => {return "#070A52"};
+    // FFBF9B, 4E6E81, e89a4a
 
     const barWidth = xScale.bandwidth();
     barGroup.selectAll("g")
@@ -177,6 +179,8 @@ var renderGraph = (svg, data, selections, onSelect) => {
             }
             return color(d.data.roomType);
         })
+        .style("stroke", "#ffffff")
+        .style("stroke-width", "1px")
         .on("mouseover", function (e, d) {
             console.log(d.data);
             tooltip.style("opacity", 1);
@@ -266,12 +270,40 @@ var renderGraph = (svg, data, selections, onSelect) => {
         .style("text-shadow", "1px 1px #000000")
         .text(d => roomTypeStringRep(d));
 
+    legend.append("text")
+        .attr("x", 15)
+        .attr("y", 100 + 30)
+        .style("font-size", "18px")
+        .style("font-weight", "bold")
+        .style("fill", "#ffffff")
+        .style("text-shadow", "1px 1px #000000")
+        .text("After Selection");
+
+    for (let i = 0; i < ROOM_TYPES.length; i++) {
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", (5 + i) * 25 + 18)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", colorSelected(ROOM_TYPES[i]))
+            .style("stroke", "#ffffff")
+            .style("stroke-width", "1px");
+
+        legend.append("text")
+            .attr("x", 30)
+            .attr("y", (5 + i) * 25.7 + 28)
+            .style("font-size", "15px")
+            .style("font-weight", "bold")
+            .style("fill", "#ffffff")
+            .style("text-shadow", "1px 1px #000000")
+            .text(roomTypeStringRep(ROOM_TYPES[i]));
+    }
     // Add a background rectangle for the legend
     legend.insert("rect", ":first-child")
         .attr("x", -5)
         .attr("y", -5)
         .attr("width", 160)
-        .attr("height", ROOM_TYPES.length * 25 + 25)
+        .attr("height", (ROOM_TYPES.length * 2 + 1) * 25 + 30)
         .attr("fill", "#4B5A5E")
         .style("opacity", 0.87)
         .style("stroke", "#ffffff")
