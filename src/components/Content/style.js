@@ -15,6 +15,7 @@ const StyledLowerLayout = styled.div`
 `;
 
 const Title = styled.p`
+    font-family: trebuchet ms, sans-serif;
     text-align: center;
     font-size: 65px;
     color: white;

@@ -47,6 +47,30 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
         .style("color", "white")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
+    const graph = svg.append("g").attr("transform", "translate(" + 100 + "," + 100 + ")");
+
+    graph.append("text")
+        .attr("class", "x-axis-label")
+        .attr("text-anchor", "end")
+        .attr("x", graph_width / 2.5)
+        .style("fill", "white")
+        .attr("y", graph_height - margin.bottom + 15)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("font-weight", "bold")
+        .attr("font-size", "20px")
+        .text("Rating");
+
+    graph.append("text")
+        .attr("class", "y-axis-label")
+        .attr("text-anchor", "end")
+        .style("fill", "white")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -70)
+        .attr("font-weight", "bold")
+        .attr("font-size", "20px")
+        .text("Price");
+
     d3.axisLeft(yScale)(yAxis);
     d3.axisBottom(xScale)(xAxis);
 
@@ -103,67 +127,67 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
             onSelect(d);
         });
 
-    
-        const width = svg.attr("width");
-        const height = svg.attr("height");
-        
-        const defs = svg.append("defs");
-        
-        const gradient = defs.append("linearGradient")
-          .attr("id", "gradient")
-          .attr("x1", "0%")
-          .attr("y1", "0%")
-          .attr("x2", "0%")
-          .attr("y2", "100%");
-        
-        gradient.append("stop")
-          .attr("offset", "0%")
-          .attr("style", "stop-color:#970B13;stop-opacity:1");
-        
-        gradient.append("stop")
-          .attr("offset", "100%")
-          .attr("style", "stop-color:#FCAA8E;stop-opacity:1");
-        
-          const legendHeight = 120;
-          const legendWidth = 120;
-          const funnelHeight = 120;
-          const funnelWidth = 70;
-          
-        //   const pathData = `M0,${funnelHeight} L${(legendWidth - funnelHeight) / 2},0 L${(legendWidth + funnelHeight) / 2},0 L${legendWidth},${funnelHeight} L0,${funnelHeight}`;
-        const pathData = `M${legendWidth/2 - funnelWidth/2},${legendHeight - funnelHeight} ` +
-        `L${legendWidth/2 + funnelWidth/2},${legendHeight - funnelHeight} ` +
-        `L${legendWidth/2 + funnelWidth/4},${legendHeight} ` +
-        `L${legendWidth/2 - funnelWidth/4},${legendHeight} ` +
-        `L${legendWidth/2 - funnelWidth/2},${legendHeight - funnelHeight}`;
-        
-        const path = svg.append("path")
-          .attr("d", pathData)
-          .attr("fill", "url(#gradient)");
-        
-        const sizeLegendText = svg.append("text")
-          .attr("x", width / 2)
-          .attr("y", height / 2)
-          .attr("text-anchor", "middle")
-          .attr("font-size", "16")
-          .text("Size Legend")
-          .style("fill", "rgb(255,255,255");
 
-          const lowerText = svg.append("text")
-          .attr("x", width / 1.5)
-          .attr("y", height / 2)
-          .attr("text-anchor", "middle")
-          .attr("font-size", "16")
-          .text("1")
-          .style("fill", "rgb(255,255,255");
+    const width = svg.attr("width");
+    const height = svg.attr("height");
 
-          const upperText = svg.append("text")
-          .attr("x", width / 3)
-          .attr("y", height / 2)
-          .attr("text-anchor", "middle")
-          .attr("font-size", "16")
-          .text("5")
-          .style("fill", "rgb(255,255,255");
-      
+    const defs = svg.append("defs");
+
+    const gradient = defs.append("linearGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "0%")
+        .attr("y2", "100%");
+
+    gradient.append("stop")
+        .attr("offset", "0%")
+        .attr("style", "stop-color:#970B13;stop-opacity:1");
+
+    gradient.append("stop")
+        .attr("offset", "100%")
+        .attr("style", "stop-color:#FCAA8E;stop-opacity:1");
+
+    const legendHeight = 120;
+    const legendWidth = 120;
+    const funnelHeight = 120;
+    const funnelWidth = 70;
+
+    //   const pathData = `M0,${funnelHeight} L${(legendWidth - funnelHeight) / 2},0 L${(legendWidth + funnelHeight) / 2},0 L${legendWidth},${funnelHeight} L0,${funnelHeight}`;
+    const pathData = `M${legendWidth / 2 - funnelWidth / 2},${legendHeight - funnelHeight} ` +
+        `L${legendWidth / 2 + funnelWidth / 2},${legendHeight - funnelHeight} ` +
+        `L${legendWidth / 2 + funnelWidth / 4},${legendHeight} ` +
+        `L${legendWidth / 2 - funnelWidth / 4},${legendHeight} ` +
+        `L${legendWidth / 2 - funnelWidth / 2},${legendHeight - funnelHeight}`;
+
+    const path = svg.append("path")
+        .attr("d", pathData)
+        .attr("fill", "url(#gradient)");
+
+    const sizeLegendText = svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height / 2)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16")
+        .text("Size Legend")
+        .style("fill", "rgb(255,255,255");
+
+    const lowerText = svg.append("text")
+        .attr("x", width / 1.5)
+        .attr("y", height / 2)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16")
+        .text("1")
+        .style("fill", "rgb(255,255,255");
+
+    const upperText = svg.append("text")
+        .attr("x", width / 3)
+        .attr("y", height / 2)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16")
+        .text("5")
+        .style("fill", "rgb(255,255,255");
+
 };
 
 

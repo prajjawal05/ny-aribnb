@@ -149,50 +149,50 @@ const renderMapSvg = (boroFreq, selectedRgns, onSelect) => {
             onSelect(getBoroughDataFromMap(d));
         });
 
-        const width = svg.attr("width");
-        const height = svg.attr("height");
-        
-        const defs = svg.append("defs");
-        
-        const gradient = defs.append("linearGradient")
-          .attr("id", "gradient")
-          .attr("x1", "0%")
-          .attr("y1", "0%")
-          .attr("x2", "0%")
-          .attr("y2", "100%");
-        
-        gradient.append("stop")
-          .attr("offset", "0%")
-          .attr("style", "stop-color:#7f1010;stop-opacity:1");
-        
-        gradient.append("stop")
-          .attr("offset", "100%")
-          .attr("style", "stop-color:#ff7b7b;stop-opacity:1");
-        
-        //   const myColors = ["#ffbaba", "#ff7b7b", "#cb1c1e", "#a70000", "#7f1010"];
-          const legendHeight = 120;
-          const legendWidth = 120;
-          const funnelHeight = 120;
-          const funnelWidth = 70;
-          
-        //   const pathData = `M0,${funnelHeight} L${(legendWidth - funnelHeight) / 2},0 L${(legendWidth + funnelHeight) / 2},0 L${legendWidth},${funnelHeight} L0,${funnelHeight}`;
-        const pathData = `M${legendWidth/2 - funnelWidth/2},${legendHeight - funnelHeight} ` +
-        `L${legendWidth/2 + funnelWidth/2},${legendHeight - funnelHeight} ` +
-        `L${legendWidth/2 + funnelWidth/4},${legendHeight} ` +
-        `L${legendWidth/2 - funnelWidth/4},${legendHeight} ` +
-        `L${legendWidth/2 - funnelWidth/2},${legendHeight - funnelHeight}`;
-        
-        const legendPath = svg.append("path")
-          .attr("d", pathData)
-          .attr("fill", "url(#gradient)");
-        
-        const sizeLegendText = svg.append("text")
-          .attr("x", width / 2)
-          .attr("y", height / 2)
-          .attr("text-anchor", "middle")
-          .attr("font-size", "16")
-          .text("Size Legend")
-          .style("fill", "rgb(255,255,255");
+    const width = svg.attr("width");
+    const height = svg.attr("height");
+
+    const defs = svg.append("defs");
+
+    const gradient = defs.append("linearGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "0%")
+        .attr("y2", "100%");
+
+    gradient.append("stop")
+        .attr("offset", "0%")
+        .attr("style", "stop-color:#7f1010;stop-opacity:1");
+
+    gradient.append("stop")
+        .attr("offset", "100%")
+        .attr("style", "stop-color:#ff7b7b;stop-opacity:1");
+
+    //   const myColors = ["#ffbaba", "#ff7b7b", "#cb1c1e", "#a70000", "#7f1010"];
+    const legendHeight = 120;
+    const legendWidth = 120;
+    const funnelHeight = 120;
+    const funnelWidth = 70;
+
+    //   const pathData = `M0,${funnelHeight} L${(legendWidth - funnelHeight) / 2},0 L${(legendWidth + funnelHeight) / 2},0 L${legendWidth},${funnelHeight} L0,${funnelHeight}`;
+    const pathData = `M${legendWidth / 2 - funnelWidth / 2},${legendHeight - funnelHeight} ` +
+        `L${legendWidth / 2 + funnelWidth / 2},${legendHeight - funnelHeight} ` +
+        `L${legendWidth / 2 + funnelWidth / 4},${legendHeight} ` +
+        `L${legendWidth / 2 - funnelWidth / 4},${legendHeight} ` +
+        `L${legendWidth / 2 - funnelWidth / 2},${legendHeight - funnelHeight}`;
+
+    const legendPath = svg.append("path")
+        .attr("d", pathData)
+        .attr("fill", "url(#gradient)");
+
+    const sizeLegendText = svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height / 2)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16")
+        .text("Size Legend")
+        .style("fill", "rgb(255,255,255");
 };
 
 const Map = ({ filters, onFilterChange = () => undefined }) => {

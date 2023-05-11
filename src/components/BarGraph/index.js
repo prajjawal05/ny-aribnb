@@ -39,19 +39,21 @@ const makeAxes = (svg) => {
         .attr("class", "x-axis-label")
         .attr("text-anchor", "end")
         .attr("x", width / 2.5)
-        .style("color", "white")
+        .style("fill", "white")
         .attr("y", height - margin.bottom + 15)
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("font-weight", "bold")
+        .attr("font-size", "18px")
         .text(xLabel);
 
     graph.append("text")
         .attr("class", "y-axis-label")
         .attr("text-anchor", "end")
-        .style("color", "white")
+        .style("fill", "white")
         .attr("transform", "rotate(-90)")
         .attr("y", -70)
         .attr("font-weight", "bold")
+        .attr("font-size", "18px")
         .text(yLabel);
 };
 
