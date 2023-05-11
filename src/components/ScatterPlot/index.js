@@ -2,6 +2,7 @@
 import * as d3 from "d3";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { getData } from "../../api";
+import { Slider } from 'rsuite';
 
 import StyledSVG from "./style";
 
@@ -243,7 +244,27 @@ const ScatterPlot = ({ filters, onFilterChange = () => undefined }) => {
     }, [selectedRating, handleSelect, scatterPlotData, yScale]);
 
     return (
+        <>
+        <div style={{ width: "auto", marginLeft: 20 }}>
+      <Slider
+        min={1}
+        max={370}
+        value={56}
+        className="custom-slider"
+        handleStyle={{
+        backgroundColor: "white",
+          borderRadius: 10,
+          color: 'rgba(127,16,16,1)',
+          fontSize: 12,
+          width: 160,
+          height: 22
+        }}
+        handleTitle={56}
+        // onChange={}
+      />
+    </div>
         <StyledSVG id="scatterplot" width="1500" height="850" />
+    </>
     );
 };
 
