@@ -164,7 +164,7 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
 
     const path = svg.append("path")
         .attr("d", pathData)
-        .attr("fill", "url(#gradient)")
+        .attr("fill", "#FFCCCB")
         .attr("transform", "translate(" + 1300 + "," + height / 3 + 10 + ")");
 
     const sizeLegendText = svg.append("text")
