@@ -1,11 +1,9 @@
 import * as d3 from "d3";
-import { useEffect, useState, useCallback } from "react";
-
-import StyledMap from "./style";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import ReactDomServer from 'react-dom/server';
 
+import StyledMap from "./style";
 import boundaryData from './boundaries.json';
-import data from '../../components/ScatterPlot/scatterdata.json';
 
 const borroughs = ['Staten Island', 'Manhattan', 'Queens', 'Brooklyn', 'Bronx'];
 const mapData = {
@@ -19,17 +17,8 @@ const HOVERED_SELECTED_COLOR = '#e89a4a';
 
 const getBoroughDataFromMap = d => d.properties.boro_code;
 
-const boroFreq = data.reduce(
-    (acc, d) => {
-        if (!acc[d.boro_code]) {
-            acc[d.boro_code] = 0;
-        }
 
-        acc[d.boro_code] = acc[d.boro_code] + 1;
-        return acc;
-    }, {});
-
-const assignOrderForFreqMap = () => {
+const assignOrderForFreqMap = boroFreq => {
     const entries = Object.entries(boroFreq);
     // console.log(entries);
     entries.sort((a, b) => a[1] - b[1]);
@@ -41,20 +30,12 @@ const assignOrderForFreqMap = () => {
     return sortedObj;
 }
 
-const getHighlightedColorScale = () => {
-    return d3.scaleSequential(d3.interpolateBlues)
-        .domain([0, d3.max(Object.values(boroFreq))]);
-}
-
 const getColorScale = () => {
     const myColors = ["#ffbaba", "#ff7b7b", "#cb1c1e", "#a70000", "#7f1010"];
 
     const myInterpolator = d3.interpolateRgbBasis(myColors);
 
     return d3.scaleSequential().domain([0, 5]).interpolator(myInterpolator);
-    // return d3.scaleSequential().domain([1, 5]).range(["#ffbaba","#ff7b7b","#cb1c1e","#a70000","#7f1010"])
-    // return d3.scaleSequential(d3.interpolateReds)
-    //     .domain([0, d3.max(Object.values(boroFreq))]);
 }
 
 const isRegionSelected = (d, selectedRgns) => {
@@ -62,8 +43,8 @@ const isRegionSelected = (d, selectedRgns) => {
     return selectedRgns.includes(rgn);
 }
 
-const renderMapSvg = (selectedRgns, onSelect) => {
-    const colorMap = assignOrderForFreqMap();
+const renderMapSvg = (boroFreq, selectedRgns, onSelect) => {
+    const colorMap = assignOrderForFreqMap(boroFreq);
 
     const projection = d3.geoAlbers()
         .center([0, 40.66])
@@ -165,8 +146,15 @@ const renderMapSvg = (selectedRgns, onSelect) => {
         });
 };
 
-const Map = ({ onSelect = () => undefined }) => {
+const Map = ({ data: allData, version, onFilterChange = () => undefined }) => {
     const [selectedRegions, updateSelectedRegions] = useState([]);
+    const [data, onDataUpdate] = useState(allData);
+    // const [version, onVersionUpdate] = useState(0);
+
+    useEffect(() => {
+        console.log("map data updated");
+        onDataUpdate(allData);
+    }, [version])
 
     const handleSelect = useCallback(rgn => {
         updateSelectedRegions(selectedRgns => {
@@ -176,13 +164,23 @@ const Map = ({ onSelect = () => undefined }) => {
             } else {
                 newRgn.push(rgn);
             }
-            onSelect(newRgn);
+            onFilterChange(newRgn);
             return newRgn;
         });
     });
 
+    const boroFreq = useMemo(() => data.reduce(
+        (acc, d) => {
+            if (!acc[d.boro_code]) {
+                acc[d.boro_code] = 0;
+            }
+
+            acc[d.boro_code] = acc[d.boro_code] + 1;
+            return acc;
+        }, {}), [data]);
+
     useEffect(() => {
-        renderMapSvg(selectedRegions, handleSelect);
+        renderMapSvg(boroFreq, selectedRegions, handleSelect);
     }, [selectedRegions, handleSelect]);
 
     return (

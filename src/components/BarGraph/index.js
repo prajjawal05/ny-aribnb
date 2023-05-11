@@ -1,4 +1,3 @@
-import data from "../ScatterPlot/scatterdata.json";
 import * as d3 from "d3";
 import { useEffect, useState, useCallback } from "react";
 
@@ -119,7 +118,7 @@ var tooltip = d3.select("body")
     .style("background-color", "white")
     .style("font-size", "16px");
 
-var renderGraph = (svg, selections, onSelect) => {
+var renderGraph = (svg, data, selections, onSelect) => {
     const attribute = "year_range";
     const graphData = createList(data, attribute);
 
@@ -242,8 +241,8 @@ var renderGraph = (svg, selections, onSelect) => {
     const legend = svg.append("g")
         .attr("class", "legend")
         .attr("transform", `translate(${margin.left + 250}, ${margin.top + 10})`);
-      
-      legend.selectAll("rect")
+
+    legend.selectAll("rect")
         .data(ROOM_TYPES)
         .enter()
         .append("rect")
@@ -254,8 +253,8 @@ var renderGraph = (svg, selections, onSelect) => {
         .attr("fill", d => color(d))
         .style("stroke", "#ffffff")
         .style("stroke-width", "1px");
-      
-      legend.selectAll("text")
+
+    legend.selectAll("text")
         .data(ROOM_TYPES)
         .enter()
         .append("text")
@@ -266,9 +265,9 @@ var renderGraph = (svg, selections, onSelect) => {
         .style("fill", "#ffffff")
         .style("text-shadow", "1px 1px #000000")
         .text(d => roomTypeStringRep(d));
-      
-      // Add a background rectangle for the legend
-      legend.insert("rect", ":first-child")
+
+    // Add a background rectangle for the legend
+    legend.insert("rect", ":first-child")
         .attr("x", -5)
         .attr("y", -5)
         .attr("width", 160)
@@ -281,8 +280,15 @@ var renderGraph = (svg, selections, onSelect) => {
 
 };
 
-const BarGraph = ({ onSelect = () => undefined }) => {
+const BarGraph = ({ data: allData, version, onFilterChange: onSelect = () => undefined }) => {
     const [selections, updateSelections] = useState([]);
+    const [data, onDataUpdate] = useState(allData);
+    // const [version, onVersionUpdate] = useState(0);
+
+    useEffect(() => {
+        console.log("bar graph data updated");
+        onDataUpdate(allData);
+    }, [version]);
 
     const handleSelect = useCallback(rgn => {
         updateSelections(selectedRgns => {
@@ -301,7 +307,7 @@ const BarGraph = ({ onSelect = () => undefined }) => {
 
     useEffect(() => {
         const svg = d3.select('#bar-graph');
-        renderGraph(svg, selections, handleSelect);
+        renderGraph(svg, data, selections, handleSelect);
 
         return () => {
             svg.selectAll('*').remove();

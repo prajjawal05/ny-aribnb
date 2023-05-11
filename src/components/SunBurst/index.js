@@ -1,7 +1,5 @@
 import * as d3 from 'd3';
-import { useCallback, useEffect, useState } from 'react';
-
-import data from '../ScatterPlot/scatterdata.json';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 
 import StyledBurst from './style';
 
@@ -66,7 +64,7 @@ const getLevelData = (d, lvl = 0) => {
     });
 }
 
-function getGraphData() {
+function getGraphData(data) {
     const children = getLevelData(data);
     const graphDataV2 = {
         name: "root",
@@ -150,11 +148,6 @@ function getNewSelection(prevSelections, rgn) {
     return finalSelection;
 }
 
-const graphDataV2 = getGraphData();
-
-const root = d3.hierarchy(graphDataV2)
-    .sum(d => d.value)
-    .sort((a, b) => b.value - a.value);
 
 var tooltip = d3.select("body")
     .append("div")
@@ -173,11 +166,8 @@ const getColorScale = () => {
     return d3.scaleSequential().domain([0, 5]).interpolator(myInterpolator);
 }
 
-const rootData = partition(root).descendants();
 
-const renderSunburst = (svg, selections, onSelect) => {
-
-    const svgPosRect = svg.node().getBoundingClientRect();
+const renderSunburst = (rootData, svg, selections, onSelect) => {
     const g = svg.selectAll("g").data(rootData);
 
     g.enter()
@@ -281,8 +271,15 @@ const parseDataForSelection = d => {
 }
 
 
-const SunBurst = ({ onSelect = select => undefined }) => {
+const SunBurst = ({ data: allData, version, onFilterChange: onSelect = select => undefined }) => {
     const [selections, updateSelections] = useState([]);
+    const [data, onDataUpdate] = useState(allData);
+    // const [version, onVersionUpdate] = useState(0);
+
+    useEffect(() => {
+        console.log("sun burst data updated");
+        onDataUpdate(allData);
+    }, [version]);
 
     const handleSelect = useCallback(rgn => {
         updateSelections(prevSelections => {
@@ -297,6 +294,16 @@ const SunBurst = ({ onSelect = select => undefined }) => {
         })
     }, []);
 
+    const rootData = useMemo(() => {
+        const graphDataV2 = getGraphData(data);
+
+        const root = d3.hierarchy(graphDataV2)
+            .sum(d => d.value)
+            .sort((a, b) => b.value - a.value);
+
+        return partition(root).descendants()
+    }, [data]);
+
     useEffect(() => {
         const svg = d3
             .select("#acbltBurst")
@@ -306,7 +313,7 @@ const SunBurst = ({ onSelect = select => undefined }) => {
             .append("g")
             .attr("transform", `translate(${WIDTH / 2},${HEIGHT / 2})`);
 
-        renderSunburst(svg, selections, handleSelect);
+        renderSunburst(rootData, svg, selections, handleSelect);
 
         return () => {
             svg.selectAll('*').remove();

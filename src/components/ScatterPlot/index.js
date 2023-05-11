@@ -2,7 +2,6 @@
 import * as d3 from "d3";
 import { useCallback, useEffect, useState, useMemo } from "react";
 
-import data from "./scatterdata.json";
 import StyledSVG from "./style";
 
 const computeJitter = (bandwidth) => {
@@ -106,8 +105,16 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
 };
 
 
-const ScatterPlot = ({ onChange = () => undefined }) => {
+const ScatterPlot = ({ data: allData, version, onFilterChange = () => undefined }) => {
     const [selectedRating, updateSelections] = useState([]);
+    const [data, onDataUpdate] = useState(allData);
+    // const [version, onVersionUpdate] = useState(0);
+
+    useEffect(() => {
+        console.log("scatter plot updated");
+        onDataUpdate(allData);
+    }, [version])
+
 
     const handleSelect = useCallback(item => {
         updateSelections(selections => {
@@ -118,10 +125,10 @@ const ScatterPlot = ({ onChange = () => undefined }) => {
                 newSelections = [...selections, item];
             }
 
-            onChange(newSelections);
+            onFilterChange(newSelections);
             return newSelections;
         })
-    }, [updateSelections, onChange]);
+    }, [updateSelections, onFilterChange]);
 
     const scatterPlotData = useMemo(() => data.map(row => ({
         "xLabelValue": xScale(row[selectedVariableX]) + computeJitter(xScale.bandwidth()),
