@@ -2,6 +2,9 @@ import data from "../ScatterPlot/scatterdata.json";
 import * as d3 from "d3";
 import { useEffect, useState, useCallback } from "react";
 
+import ReactDomServer from 'react-dom/server';
+
+
 import StyledSVG from "./style";
 
 
@@ -12,6 +15,8 @@ const xLabel = "Year Range";
 const yLabel = "Frequency";
 const xScale = d3.scaleBand().range([0, width]).padding(0.2);
 const yScale = d3.scaleLinear().range([height, 0]).nice();
+
+const ROOM_TYPES = ["Private_room", "Entire_home_apt", "Hotel_room", "Shared_room"];
 
 const makeAxes = (svg) => {
     svg.append("g")
@@ -87,6 +92,18 @@ const isSelected = (selections, item) => {
     return false;
 }
 
+var tooltip = d3.select("body")
+    .append("div")
+    .attr("id", "barGraph")
+    .attr("class", "tooltip")
+    .style("opacity", 0)
+    .style("position", "absolute")
+    // .style("height", "100px")
+    // .style("width", "100px")
+    .style("color", "black")
+    .style("background-color", "white")
+    .style("font-size", "16px");
+
 var renderGraph = (svg, selections, onSelect) => {
     const attribute = "year_range";
     const graphData = createList(data, attribute);
@@ -96,7 +113,7 @@ var renderGraph = (svg, selections, onSelect) => {
     makeAxes(svg);
 
     const stackedData = d3.stack()
-        .keys(["Private_room", "Entire_home_apt", "Hotel_room", "Shared_room"])(graphData)
+        .keys(ROOM_TYPES)(graphData)
         .map(roomWise => {
             let newData = roomWise.map(({ data, ...rest }) => ({
                 ...rest,
@@ -113,12 +130,11 @@ var renderGraph = (svg, selections, onSelect) => {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     const color = d3.scaleOrdinal()
-        .domain(["Private_room", "Entire_home_apt", "Hotel_room", "Shared_room"])
+        .domain(ROOM_TYPES)
         .range([d3.interpolateReds(1), d3.interpolateReds(0.75), d3.interpolateReds(0.5), d3.interpolateReds(0.25)]);
 
-
     const colorSelected = d3.scaleOrdinal()
-        .domain(["Private_room", "Entire_home_apt", "Hotel_room", "Shared_room"])
+        .domain(ROOM_TYPES)
         .range([d3.interpolateGreens(1), d3.interpolateGreens(0.75), d3.interpolateGreens(0.5), d3.interpolateGreens(0.25)]);
 
     const barWidth = xScale.bandwidth();
@@ -147,6 +163,26 @@ var renderGraph = (svg, selections, onSelect) => {
             return color(d.data.roomType);
         })
         .on("mouseover", function (e, d) {
+            tooltip.style("opacity", 1);
+            tooltip.html(
+                ReactDomServer.renderToString(
+                    <>
+                        <h6>{d.data.roomType} ({d.data.key})</h6>
+                        <div style={{ height: "150px", display: "flex", justifyContent: "center", fontSize: "16px" }}>
+                            {ROOM_TYPES.map(type => (
+                                <>
+                                    <svg><circle cx="10" cy="10" r="5" stroke="black" stroke-width="3" fill="red" /></svg> <br /> {type} ({d.data[type]})<br />
+                                </>
+                            ))
+                            }
+                        </div >
+                    </>
+                )
+            );
+
+            tooltip.style("left", e.x + 40 + "px")
+                .style("top", e.y + 40 + "px");
+
             d3.select(this)
                 .classed('highlighted', true)
                 .attr("width", barWidth * 1.25)
@@ -177,7 +213,6 @@ const BarGraph = ({ onSelect = () => undefined }) => {
             }
 
             onSelect(newRgn);
-            console.log(newRgn);
             return newRgn;
         });
     });

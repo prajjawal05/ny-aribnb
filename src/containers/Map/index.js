@@ -66,7 +66,6 @@ const renderMapSvg = (selectedRgns, onSelect) => {
         .style("font-size", "16px");
 
     const svg = d3.select('#nycmap');
-    const svgPosRect = svg.node().getBoundingClientRect();
 
     svg.append("g")
         .selectAll("path")

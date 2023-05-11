@@ -31,8 +31,6 @@ const dataLinks = data.links.map(
         ({ ...lnk, value: lnk.value * 1 })
 );
 
-console.log(dataLinks);
-
 function MDSPlot({ width = 700, height = 700 }) {
     useEffect(() => {
         const svg = d3.select('#mdsPlot')
