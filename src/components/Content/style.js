@@ -31,7 +31,7 @@ const GraphTitle = styled.p`
     font-size: 40px;
     color: white;
     margin: 0px;
-    margin-top: 5px;
+    margin-top: 10px;
 `;
 
 const StyledPlot = styled.div`

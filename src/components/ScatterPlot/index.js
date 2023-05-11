@@ -162,30 +162,32 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
 
     const path = svg.append("path")
         .attr("d", pathData)
-        .attr("fill", "url(#gradient)");
+        .attr("fill", "url(#gradient)")
+        .attr("transform", "translate(" + 1300 + "," + height / 3 + ")");
 
     const sizeLegendText = svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", height / 2)
+        .attr("x", 1350)
+        .attr("y", height / 3 - 100)
         .attr("text-anchor", "middle")
-        .attr("font-size", "16")
-        .text("Size Legend")
+        .attr("font-size", "20")
+        .attr("font-weight", "bold")
+        .text("Number of reviews")
         .style("fill", "rgb(255,255,255");
 
     const lowerText = svg.append("text")
-        .attr("x", width / 1.5)
-        .attr("y", height / 2)
+        .attr("x", 1360)
+        .attr("y", height / 2 + 15)
         .attr("text-anchor", "middle")
         .attr("font-size", "16")
-        .text("1")
+        .text(d => d3.min(scatterPlotData, function (d) { return d.review; }))
         .style("fill", "rgb(255,255,255");
 
     const upperText = svg.append("text")
-        .attr("x", width / 3)
-        .attr("y", height / 2)
+        .attr("x", 1355)
+        .attr("y", height / 3 - 20)
         .attr("text-anchor", "middle")
         .attr("font-size", "16")
-        .text("5")
+        .text(d => d3.max(scatterPlotData, function (d) { return d.review; }))
         .style("fill", "rgb(255,255,255");
 
 };
