@@ -167,7 +167,7 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
 
     const sizeLegendText = svg.append("text")
         .attr("x", 1350)
-        .attr("y", height / 3 - 100)
+        .attr("y", height / 3 - 70)
         .attr("text-anchor", "middle")
         .attr("font-size", "20")
         .attr("font-weight", "bold")
