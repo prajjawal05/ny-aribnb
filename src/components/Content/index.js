@@ -33,11 +33,11 @@ const FILTER_INDEX = {
 const UpperLayout = ({ onFilterChange, versions, ...rest }) => {
     const onMapItemsChange = useCallback(filter => {
         onFilterChange(FILTER_TYPES.MAP, filter);
-    }, []);
+    }, [onFilterChange]);
 
     const onScatterPlotChange = useCallback(filter => {
         onFilterChange(FILTER_TYPES.SCATTER_PLOT, filter);
-    }, []);
+    }, [onFilterChange]);
 
     return (
         <StyledUpperLayout>
@@ -59,11 +59,11 @@ const UpperLayout = ({ onFilterChange, versions, ...rest }) => {
 const LowerLayout = ({ onFilterChange, versions, ...rest }) => {
     const onBarGraphChange = useCallback(filter => {
         onFilterChange(FILTER_TYPES.BAR_GRAPH, filter);
-    }, []);
+    }, [onFilterChange]);
 
     const onSunBurstChange = useCallback(filter => {
         onFilterChange(FILTER_TYPES.SUN_BURST, filter);
-    }, []);
+    }, [onFilterChange]);
 
     return (
         <StyledLowerLayout>
@@ -93,12 +93,26 @@ const Layout = props => (
 
 const Content = () => {
     const [data, updateData] = useState(dataSet);
-    const [filter, updateFilters] = useState(DEFAULT_FILTERS);
+    const [_, updateFilters] = useState(DEFAULT_FILTERS);
     const [versions, updateVersions] = useState([0, 0, 0, 0]);
 
-    const onDataUpdate = (filter, type) => {
-        console.log(filter);
+    const onDataUpdate = useCallback(async (filter, type) => {
+        const data = await new Promise((resolve, reject) => fetch('http://localhost:5668/api/data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(filter)
+        })
+            .then(response => response.json())
+            .then(data => {
+                resolve(data);
+            })
+            .catch(error => {
+                reject(error);
+            }));
 
+        updateData(data);
         updateVersions(prevVersion => {
             const newVersions = [...prevVersion];
             Object.values(FILTER_TYPES).forEach(filterType => {
@@ -107,8 +121,8 @@ const Content = () => {
                 }
             })
             return newVersions;
-        })
-    }
+        });
+    }, []);
 
     const onFilterChange = useCallback((type, value) => {
         updateFilters(prevFilter => {
@@ -117,7 +131,7 @@ const Content = () => {
 
             return newFilter;
         })
-    }, []);
+    }, [onDataUpdate]);
 
     return <Layout
         data={data}

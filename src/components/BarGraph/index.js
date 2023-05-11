@@ -98,7 +98,7 @@ var createList = (data, selectedVariable) => {
 
 const isSelected = (selections, item) => {
     for (const rgn of selections) {
-        if (item.key == rgn.key && item.roomType == rgn.roomType) {
+        if (item.key === rgn.key && item.roomType === rgn.roomType) {
             return true;
         }
     }
@@ -106,7 +106,7 @@ const isSelected = (selections, item) => {
     return false;
 }
 
-var tooltip = d3.select("body")
+const tooltip = d3.select("body")
     .append("div")
     .attr("id", "barGraph")
     .attr("class", "tooltip")
@@ -327,7 +327,7 @@ const BarGraph = ({ data: allData, version, onFilterChange: onSelect = () => und
             let newRgn = [...selectedRgns];
 
             if (isSelected(newRgn, rgn)) {
-                newRgn = newRgn.filter(item => item.key != rgn.key || item.roomType != rgn.roomType);
+                newRgn = newRgn.filter(item => item.key !== rgn.key || item.roomType !== rgn.roomType);
             } else {
                 newRgn = [...newRgn, { ...rgn }];
             }
@@ -335,7 +335,7 @@ const BarGraph = ({ data: allData, version, onFilterChange: onSelect = () => und
             onSelect(newRgn);
             return newRgn;
         });
-    });
+    }, [onSelect, updateSelections]);
 
     useEffect(() => {
         const svg = d3.select('#bar-graph');
@@ -344,7 +344,7 @@ const BarGraph = ({ data: allData, version, onFilterChange: onSelect = () => und
         return () => {
             svg.selectAll('*').remove();
         };
-    }, [selections, handleSelect]);
+    }, [data, selections, handleSelect]);
 
     return (
         <StyledSVG id="bar-graph" width="600" height="600" />

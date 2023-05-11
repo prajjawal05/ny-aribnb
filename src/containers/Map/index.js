@@ -43,6 +43,17 @@ const isRegionSelected = (d, selectedRgns) => {
     return selectedRgns.includes(rgn);
 }
 
+var tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0)
+    .style("position", "absolute")
+    // .style("height", "100px")
+    // .style("width", "100px")
+    .style("color", "black")
+    .style("background-color", "white")
+    .style("font-size", "16px");
+
 const renderMapSvg = (boroFreq, selectedRgns, onSelect) => {
     const colorMap = assignOrderForFreqMap(boroFreq);
 
@@ -56,16 +67,6 @@ const renderMapSvg = (boroFreq, selectedRgns, onSelect) => {
     const path = d3.geoPath()
         .projection(projection);
 
-    var tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0)
-        .style("position", "absolute")
-        // .style("height", "100px")
-        // .style("width", "100px")
-        .style("color", "black")
-        .style("background-color", "white")
-        .style("font-size", "16px");
 
     const svg = d3.select('#nycmap');
 
@@ -167,7 +168,7 @@ const Map = ({ data: allData, version, onFilterChange = () => undefined }) => {
             onFilterChange(newRgn);
             return newRgn;
         });
-    });
+    }, [updateSelectedRegions, onFilterChange]);
 
     const boroFreq = useMemo(() => data.reduce(
         (acc, d) => {
@@ -181,7 +182,7 @@ const Map = ({ data: allData, version, onFilterChange = () => undefined }) => {
 
     useEffect(() => {
         renderMapSvg(boroFreq, selectedRegions, handleSelect);
-    }, [selectedRegions, handleSelect]);
+    }, [selectedRegions, handleSelect, boroFreq]);
 
     return (
         <StyledMap>
