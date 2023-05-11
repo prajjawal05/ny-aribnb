@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 
 import ReactDomServer from 'react-dom/server';
+import { getData } from "../../api";
 
 import StyledBurst from './style';
 
@@ -378,15 +379,17 @@ const parseDataForSelection = d => {
 }
 
 
-const SunBurst = ({ data: allData, version, onFilterChange: onSelect = select => undefined }) => {
+const SunBurst = ({ filters, onFilterChange: onSelect = () => undefined }) => {
     const [selections, updateSelections] = useState([]);
-    const [data, onDataUpdate] = useState(allData);
-    // const [version, onVersionUpdate] = useState(0);
+    const [data, onDataUpdate] = useState([]);
 
     useEffect(() => {
-        console.log("sun burst data updated");
-        onDataUpdate(allData);
-    }, [version]);
+        async function fetchData() {
+            const filteredData = await getData(filters);
+            onDataUpdate(filteredData);
+        }
+        fetchData();
+    }, [JSON.stringify(filters)]);
 
     const handleSelect = useCallback(rgn => {
         updateSelections(prevSelections => {

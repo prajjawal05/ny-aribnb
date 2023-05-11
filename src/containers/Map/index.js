@@ -2,6 +2,9 @@ import * as d3 from "d3";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import ReactDomServer from 'react-dom/server';
 
+import { getData } from "../../api";
+
+
 import StyledMap from "./style";
 import boundaryData from './boundaries.json';
 
@@ -147,15 +150,17 @@ const renderMapSvg = (boroFreq, selectedRgns, onSelect) => {
         });
 };
 
-const Map = ({ data: allData, version, onFilterChange = () => undefined }) => {
+const Map = ({ filters, onFilterChange = () => undefined }) => {
     const [selectedRegions, updateSelectedRegions] = useState([]);
-    const [data, onDataUpdate] = useState(allData);
-    // const [version, onVersionUpdate] = useState(0);
+    const [data, onDataUpdate] = useState([]);
 
     useEffect(() => {
-        console.log("map data updated");
-        onDataUpdate(allData);
-    }, [version])
+        async function fetchData() {
+            const filteredData = await getData(filters);
+            onDataUpdate(filteredData);
+        }
+        fetchData();
+    }, [JSON.stringify(filters)]);
 
     const handleSelect = useCallback(rgn => {
         updateSelectedRegions(selectedRgns => {

@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import data from './data.json';
+import { getData } from '../../api';
 
 function drag(simulation) {
     function dragstarted(event) {
@@ -26,12 +27,17 @@ function drag(simulation) {
         .on('end', dragended);
 }
 
-const dataLinks = data.links.map(
-    lnk =>
-        ({ ...lnk, value: lnk.value * 1 })
-);
+function MDSPlot({ width = 700, height = 700, filters }) {
+    const [data, onDataUpdate] = useState({ nodes: [], links: [] });
 
-function MDSPlot({ width = 700, height = 700 }) {
+    useEffect(() => {
+        async function fetchData() {
+            const filteredData = await getData(filters, '/mds');
+            onDataUpdate(filteredData);
+        }
+        fetchData();
+    }, [filters]);
+
     useEffect(() => {
         const svg = d3.select('#mdsPlot')
             .attr('width', width)
@@ -39,13 +45,13 @@ function MDSPlot({ width = 700, height = 700 }) {
 
         // create the force simulation
         const simulation = d3.forceSimulation(data.nodes)
-            .force('link', d3.forceLink(dataLinks).id(d => d.id))
+            .force('link', d3.forceLink(data.links).id(d => d.id))
             .force('charge', d3.forceManyBody().strength(-4000))
             .force('center', d3.forceCenter(width / 2, height / 2));
 
         // create the links
         const links = svg.selectAll('line')
-            .data(dataLinks)
+            .data(data.links)
             .enter().append('line')
             .attr('stroke', d => 'white')
             .attr('stroke-opacity', 0.6)
@@ -94,7 +100,7 @@ function MDSPlot({ width = 700, height = 700 }) {
             simulation.stop();
             svg.selectAll('*').remove();
         };
-    }, [width, height]);
+    }, [data, width, height]);
 
     return <svg id='mdsPlot'></svg>;
 }

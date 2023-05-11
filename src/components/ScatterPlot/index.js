@@ -1,6 +1,7 @@
 
 import * as d3 from "d3";
 import { useCallback, useEffect, useState, useMemo } from "react";
+import { getData } from "../../api";
 
 import StyledSVG from "./style";
 
@@ -105,15 +106,17 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
 };
 
 
-const ScatterPlot = ({ data: allData, version, onFilterChange = () => undefined }) => {
+const ScatterPlot = ({ filters, onFilterChange = () => undefined }) => {
     const [selectedRating, updateSelections] = useState([]);
-    const [data, onDataUpdate] = useState(allData);
-    // const [version, onVersionUpdate] = useState(0);
+    const [data, onDataUpdate] = useState([]);
 
     useEffect(() => {
-        console.log("scatter plot updated");
-        onDataUpdate(allData);
-    }, [version])
+        async function fetchData() {
+            const filteredData = await getData(filters);
+            onDataUpdate(filteredData);
+        }
+        fetchData();
+    }, [JSON.stringify(filters)]);
 
 
     const handleSelect = useCallback(item => {

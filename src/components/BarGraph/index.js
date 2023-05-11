@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 
 import ReactDomServer from 'react-dom/server';
 
+import { getData } from "../../api";
 
 import StyledSVG from "./style";
 
@@ -312,15 +313,17 @@ var renderGraph = (svg, data, selections, onSelect) => {
 
 };
 
-const BarGraph = ({ data: allData, version, onFilterChange: onSelect = () => undefined }) => {
+const BarGraph = ({ filters, onFilterChange: onSelect = () => undefined }) => {
     const [selections, updateSelections] = useState([]);
-    const [data, onDataUpdate] = useState(allData);
-    // const [version, onVersionUpdate] = useState(0);
+    const [data, onDataUpdate] = useState([]);
 
     useEffect(() => {
-        console.log("bar graph data updated");
-        onDataUpdate(allData);
-    }, [version]);
+        async function fetchData() {
+            const filteredData = await getData(filters);
+            onDataUpdate(filteredData);
+        }
+        fetchData();
+    }, [JSON.stringify(filters)]);
 
     const handleSelect = useCallback(rgn => {
         updateSelections(selectedRgns => {

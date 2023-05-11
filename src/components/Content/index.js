@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import Map from "../../containers/Map";
 import BarGraph from "../BarGraph";
 import ScatterPlot from "../ScatterPlot";
@@ -8,6 +8,7 @@ import MDSPlot from "../MDSPlot";
 import dataSet from './scatterdata.json';
 
 import { StyledUpperLayout, StyledLowerLayout, StyledContent, StyledVerticalLine, Title, GraphTitle, StyledPlot } from "./style";
+import { removeKeyFromObject } from "../../utils";
 
 const FILTER_TYPES = {
     MAP: "MAP",
@@ -30,7 +31,7 @@ const FILTER_INDEX = {
     [FILTER_TYPES.SUN_BURST]: 3,
 }
 
-const UpperLayout = ({ onFilterChange, versions, ...rest }) => {
+const UpperLayout = ({ onFilterChange, filters, ...rest }) => {
     const onMapItemsChange = useCallback(filter => {
         onFilterChange(FILTER_TYPES.MAP, filter);
     }, [onFilterChange]);
@@ -39,6 +40,14 @@ const UpperLayout = ({ onFilterChange, versions, ...rest }) => {
         onFilterChange(FILTER_TYPES.SCATTER_PLOT, filter);
     }, [onFilterChange]);
 
+
+    const filterForMap = useMemo(
+        () => removeKeyFromObject(filters, FILTER_TYPES.MAP), [filters]
+    );
+    const filterForScatterplot = useMemo(
+        () => removeKeyFromObject(filters, FILTER_TYPES.SCATTER_PLOT), [filters]
+    );
+
     return (
         <StyledUpperLayout>
             <StyledPlot>
@@ -46,7 +55,7 @@ const UpperLayout = ({ onFilterChange, versions, ...rest }) => {
                 <Map
                     {...rest}
                     onFilterChange={onMapItemsChange}
-                    version={versions[FILTER_INDEX[FILTER_TYPES.MAP]]}
+                    filters={filterForMap}
                 />
             </StyledPlot>
             <StyledVerticalLine />
@@ -55,14 +64,14 @@ const UpperLayout = ({ onFilterChange, versions, ...rest }) => {
                 <ScatterPlot
                     {...rest}
                     onFilterChange={onScatterPlotChange}
-                    version={versions[FILTER_INDEX[FILTER_TYPES.SCATTER_PLOT]]}
+                    filters={filterForScatterplot}
                 />
             </StyledPlot>
         </StyledUpperLayout>
     )
 };
 
-const LowerLayout = ({ onFilterChange, versions, ...rest }) => {
+const LowerLayout = ({ onFilterChange, filters, ...rest }) => {
     const onBarGraphChange = useCallback(filter => {
         onFilterChange(FILTER_TYPES.BAR_GRAPH, filter);
     }, [onFilterChange]);
@@ -71,11 +80,17 @@ const LowerLayout = ({ onFilterChange, versions, ...rest }) => {
         onFilterChange(FILTER_TYPES.SUN_BURST, filter);
     }, [onFilterChange]);
 
+    const filterForSunburst = useMemo(
+        () => removeKeyFromObject(filters, FILTER_TYPES.SUN_BURST), [filters]
+    );
+    const filterForBarGraph = useMemo(
+        () => removeKeyFromObject(filters, FILTER_TYPES.BAR_GRAPH), [filters]
+    );
     return (
         <StyledLowerLayout>
             <StyledPlot>
                 <GraphTitle>MDS Plot</GraphTitle>
-                <MDSPlot />
+                <MDSPlot filters={filters} />
             </StyledPlot>
             <StyledVerticalLine />
             <StyledPlot>
@@ -83,7 +98,8 @@ const LowerLayout = ({ onFilterChange, versions, ...rest }) => {
                 <BarGraph
                     {...rest}
                     onFilterChange={onBarGraphChange}
-                    version={versions[FILTER_INDEX[FILTER_TYPES.BAR_GRAPH]]} />
+                    filters={filterForBarGraph}
+                />
             </StyledPlot>
             <StyledVerticalLine />
             <StyledPlot>
@@ -91,7 +107,7 @@ const LowerLayout = ({ onFilterChange, versions, ...rest }) => {
                 <SunBurst
                     {...rest}
                     onFilterChange={onSunBurstChange}
-                    version={versions[FILTER_INDEX[FILTER_TYPES.SUN_BURST]]}
+                    filters={filterForSunburst}
                 />
             </StyledPlot>
         </StyledLowerLayout>
@@ -107,50 +123,16 @@ const Layout = props => (
 );
 
 const Content = () => {
-    const [data, updateData] = useState(dataSet);
-    const [_, updateFilters] = useState(DEFAULT_FILTERS);
-    const [versions, updateVersions] = useState([0, 0, 0, 0]);
-
-    const onDataUpdate = useCallback(async (filter, type) => {
-        const data = await new Promise((resolve, reject) => fetch('http://localhost:5668/api/data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(filter)
-        })
-            .then(response => response.json())
-            .then(data => {
-                resolve(data);
-            })
-            .catch(error => {
-                reject(error);
-            }));
-
-        updateData(data);
-        updateVersions(prevVersion => {
-            const newVersions = [...prevVersion];
-            Object.values(FILTER_TYPES).forEach(filterType => {
-                if (filterType !== type) {
-                    newVersions[FILTER_INDEX[filterType]]++;
-                }
-            })
-            return newVersions;
-        });
-    }, []);
+    const [filters, updateFilters] = useState(DEFAULT_FILTERS);
 
     const onFilterChange = useCallback((type, value) => {
         updateFilters(prevFilter => {
-            const newFilter = { ...prevFilter, [type]: value };
-            onDataUpdate(newFilter, type);
-
-            return newFilter;
+            return { ...prevFilter, [type]: value };
         })
-    }, [onDataUpdate]);
+    }, []);
 
     return <Layout
-        data={data}
-        versions={versions}
+        filters={filters}
         onFilterChange={onFilterChange}
     />
 }
