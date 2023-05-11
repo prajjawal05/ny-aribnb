@@ -23,7 +23,7 @@ const NONE_COLOR = 'rgba(0,0,0,0.0)';
 const HIGHLIGHT_COLOR = 'rgba(18, 106, 181,0.45)';
 
 const margin = { top: 70, bottom: 70, left: 70, right: 70 };
-const graph_width = 900, graph_height = 650;
+const graph_width = 1500, graph_height = 650;
 
 const selectedVariableX = "review rate number";
 const selectedVariableY = "price";
@@ -31,7 +31,7 @@ const selectedVariableY = "price";
 const cancellationPolicyMap = { "strict": 4, "moderate": 3, "flexible": 2 };
 
 const xScale = d3.scaleBand()
-    .range([0, graph_width])
+    .range([0, graph_width - 400])
     .domain([1, 2, 3, 4, 5]);
 
 const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
@@ -217,7 +217,7 @@ const ScatterPlot = ({ filters, onFilterChange = () => undefined }) => {
     }, [selectedRating, handleSelect, scatterPlotData, yScale]);
 
     return (
-        <StyledSVG id="scatterplot" width="1000" height="850" />
+        <StyledSVG id="scatterplot" width="1500" height="850" />
     );
 };
 

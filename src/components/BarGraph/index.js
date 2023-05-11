@@ -8,7 +8,7 @@ import { getData } from "../../api";
 import StyledSVG from "./style";
 
 
-const margin = { top: 70, bottom: 70, left: 70, right: 70 };
+const margin = { top: 70, bottom: 70, left: 40, right: 70 };
 const width = 600, height = 500;
 
 const xLabel = "Year Range";
@@ -245,7 +245,7 @@ var renderGraph = (svg, data, selections, onSelect) => {
         });
     const legend = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${margin.left + 250}, ${margin.top + 10})`);
+        .attr("transform", `translate(${margin.left + 700}, ${margin.top + 10})`);
 
     legend.selectAll("rect")
         .data(ROOM_TYPES)
@@ -350,7 +350,7 @@ const BarGraph = ({ filters, onFilterChange: onSelect = () => undefined }) => {
     }, [data, selections, handleSelect]);
 
     return (
-        <StyledSVG id="bar-graph" width="600" height="600" />
+        <StyledSVG id="bar-graph" width="900" height="700" />
     );
 };
 

@@ -6,9 +6,10 @@ import { getData } from "../../api";
 
 import StyledBurst from './style';
 
-const WIDTH = 500, HEIGHT = 500;
-const RADIUS = Math.min(WIDTH, HEIGHT) / 2;
+const WIDTH = 800, HEIGHT = 700;
+const RADIUS = 250; //Math.min(WIDTH, HEIGHT) / 2;
 const partition = d3.partition().size([2 * Math.PI, RADIUS]);
+const margin = { left: 70, top: 70 };
 
 const addAngles = (parent, children) => {
     let start = parent.prev;
@@ -173,7 +174,8 @@ const getSelectedColorScale = () => {
 
 
 const renderSunburst = (rootData, svg, selections, onSelect) => {
-    const g = svg.selectAll("g").data(rootData);
+    const g = svg.selectAll("g").data(rootData)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     g.enter()
         .append("g")
@@ -283,7 +285,7 @@ const renderSunburst = (rootData, svg, selections, onSelect) => {
 
     const legend = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${0}, ${0})`);
+        .attr("transform", `translate(300, -270)`);
 
     legend.selectAll("rect")
         .data(legendData)
@@ -421,7 +423,7 @@ const SunBurst = ({ filters, onFilterChange: onSelect = () => undefined }) => {
             .attr("width", WIDTH)
             .attr("height", HEIGHT)
             .append("g")
-            .attr("transform", `translate(${WIDTH / 2},${HEIGHT / 2})`);
+            .attr("transform", `translate(${WIDTH / 2 - 100},${HEIGHT / 2})`);
 
         renderSunburst(rootData, svg, selections, handleSelect);
 
@@ -432,7 +434,7 @@ const SunBurst = ({ filters, onFilterChange: onSelect = () => undefined }) => {
 
     return (
         <StyledBurst>
-            <svg id="acbltBurst" width="600" height="600" />
+            <svg id="acbltBurst" width="800" height="600" />
         </StyledBurst>
     )
 };
