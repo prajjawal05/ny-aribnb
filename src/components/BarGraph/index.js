@@ -129,9 +129,10 @@ var renderGraph = (svg, selections, onSelect) => {
     const barGroup = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    const myColors = ["#ff7b7b","#cb1c1e","#a70000","#7f1010"];
     const color = d3.scaleOrdinal()
         .domain(ROOM_TYPES)
-        .range([d3.interpolateReds(1), d3.interpolateReds(0.75), d3.interpolateReds(0.5), d3.interpolateReds(0.25)]);
+        .range(myColors);
 
     const colorSelected = d3.scaleOrdinal()
         .domain(ROOM_TYPES)
@@ -163,24 +164,57 @@ var renderGraph = (svg, selections, onSelect) => {
             return color(d.data.roomType);
         })
         .on("mouseover", function (e, d) {
+            console.log(d.data);
             tooltip.style("opacity", 1);
+            // tooltip.html(
+            //     ReactDomServer.renderToString(
+            //         <div style={{ width: "150px", height: "auto", display: "flex", justifyContent: "center" }}>
+            //             {d.data.roomType}
+            //             <br />
+            //             {d.data[d.data.roomType]} ({((d.data[d.data.roomType] * 100 / ROOM_TYPES.map(roomType => d.data[roomType]).reduce((x,y)=>x+y,0)).toFixed(2))}%)
+            //         </div>
+            //     )
+            // );
             tooltip.html(
                 ReactDomServer.renderToString(
-                    <>
-                        <h6>{d.data.roomType} ({d.data.key})</h6>
-                        <div style={{ height: "150px", display: "flex", justifyContent: "center", fontSize: "16px" }}>
-                            {ROOM_TYPES.map(type => (
-                                <>
-                                    <svg><circle cx="10" cy="10" r="5" stroke="black" stroke-width="2" fill="red" /></svg>
-                                    <br />
-                                    {type} ({d.data[type]})<br />
-                                </>
-                            ))
-                            }
-                        </div >
-                    </>
+                    <div style={{
+                        width: "200px",
+                        height: "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "10px",
+                        backgroundColor: "#333333",
+                        color: "#ffffff",
+                        borderRadius: "5px",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.3)",
+                        fontSize: "14px",
+                        fontFamily: "Arial, sans-serif",
+                        lineHeight: "1.4em",
+                        textTransform: "uppercase",
+                    }}>
+                        <div style={{
+                            marginBottom: "10px",
+                            fontWeight: "bold",
+                            fontSize: "18px",
+                            textShadow: "1px 1px #000000",
+                        }}>
+                            {d.data.roomType}
+                        </div>
+                        <div style={{
+                            textAlign: "center",
+                            fontSize: "19px",
+                        }}>
+                            {d.data[d.data.roomType]} ({(
+                                (d.data[d.data.roomType] * 100 / ROOM_TYPES.map(roomType => d.data[roomType]).reduce((x, y) => x + y, 0)).toFixed(2)
+                            )}%)
+                        </div>
+                    </div>
                 )
             );
+            
+            
 
             tooltip.style("left", e.x + 40 + "px")
                 .style("top", e.y + 40 + "px");

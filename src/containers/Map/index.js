@@ -108,10 +108,37 @@ const renderMapSvg = (selectedRgns, onSelect) => {
             tooltip.style("opacity", 1);
             tooltip.html(
                 ReactDomServer.renderToString(
-                    <div style={{ width: "100px", height: "50px", display: "flex", justifyContent: "center" }}>
-                        {d.properties.boro_name}
-                        <br />
-                        ({boroFreq[getBoroughDataFromMap(d)]})
+                    <div style={{
+                        width: "150px",
+                        height: "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "10px",
+                        backgroundColor: "#333333",
+                        color: "#ffffff",
+                        borderRadius: "5px",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.3)",
+                        fontSize: "14px",
+                        fontFamily: "Arial, sans-serif",
+                        lineHeight: "1.4em",
+                        textTransform: "uppercase",
+                    }}>
+                        <div style={{
+                            marginBottom: "10px",
+                            fontWeight: "bold",
+                            fontSize: "18px",
+                            textShadow: "1px 1px #000000",
+                        }}>
+                            {d.properties.boro_name}
+                        </div>
+                        <div style={{
+                            textAlign: "center",
+                            fontSize: "19px",
+                        }}>
+                            ({boroFreq[getBoroughDataFromMap(d)]})
+                        </div>
                     </div>
                 )
             );
