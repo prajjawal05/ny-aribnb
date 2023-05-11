@@ -131,72 +131,76 @@ var tooltip = d3.select("body")
     .style('color', "white")
 // .style('width', '200px');
 
+const renderSunburst = () => {
+    const svg = d3
+        .select("#acbltBurst")
+        .append("svg")
+        .attr("width", WIDTH)
+        .attr("height", HEIGHT)
+        .append("g")
+        .attr("transform", `translate(${WIDTH / 2},${HEIGHT / 2})`);
+
+    const svgPosRect = svg.node().getBoundingClientRect();
+    const g = svg.selectAll("g").data(partition(root).descendants());
+
+    g.enter()
+        .append("g")
+        .attr("class", "node")
+        .append("path")
+        .attr("d", arc)
+        .style("fill", (d) => {
+            return getColorScale()(d.depth);
+        })
+        .style("opacity", (d) => {
+            if (d.depth === 0) {
+                return 0;
+            }
+            return 1;
+        })
+        .on("mouseover", function (e, d) {
+            this.parentNode.appendChild(this);
+            tooltip.style("opacity", 1);
+            tooltip.html(`${d.data.name} (${d.data.value})`);
+
+            tooltip.style("left", svgPosRect.right + WIDTH / 3 + "px")
+                .style("top", svgPosRect.top - HEIGHT / 2 + "px");
+            const fillColor = 'red';
+
+            const descendants = d.descendants();
+
+            svg.selectAll('path')
+                .filter((nd) => nd === d || descendants.includes(nd))
+                .attr("stroke-width", 2)
+                .classed("highlighted", true)
+                .style('fill', fillColor);
+        })
+        .on("mouseout", function (e, d) {
+            tooltip.style("opacity", 0);
+
+            const descendants = d.descendants();
+
+            svg.selectAll('path')
+                .filter((nd) => nd === d || descendants.includes(nd))
+                .classed("highlighted", false)
+                .attr("transform", null)
+                .style("stroke-width", 1)
+                .style("fill", x => {
+                    let fillColor = getColorScale()(x.depth);
+                    if (x.depth === 0) {
+                        fillColor = 'black';
+                    }
+
+                    return fillColor;
+                });
+        })
+        .on("click", function (e, d) {
+            console.log(d);
+        });
+}
+
 const SunBurst = () => {
     useEffect(() => {
-        const svg = d3
-            .select("#acbltBurst")
-            .append("svg")
-            .attr("width", WIDTH)
-            .attr("height", HEIGHT)
-            .append("g")
-            .attr("transform", `translate(${WIDTH / 2},${HEIGHT / 2})`);
-
-        const svgPosRect = svg.node().getBoundingClientRect();
-        const g = svg.selectAll("g").data(partition(root).descendants());
-
-        g.enter()
-            .append("g")
-            .attr("class", "node")
-            .append("path")
-            .attr("d", arc)
-            .style("fill", (d) => {
-                return getColorScale()(d.depth);
-            })
-            .style("opacity", (d) => {
-                if (d.depth === 0) {
-                    return 0;
-                }
-                return 1;
-            })
-            .on("mouseover", function (e, d) {
-                this.parentNode.appendChild(this);
-                tooltip.style("opacity", 1);
-                tooltip.html(`${d.data.name} (${d.data.value})`);
-
-                tooltip.style("left", svgPosRect.right + WIDTH / 3 + "px")
-                    .style("top", svgPosRect.top - HEIGHT / 2 + "px");
-                const fillColor = 'red';
-
-                const descendants = d.descendants();
-
-                svg.selectAll('path')
-                    .filter((nd) => nd === d || descendants.includes(nd))
-                    .attr("stroke-width", 2)
-                    .classed("highlighted", true)
-                    .style('fill', fillColor);
-            })
-            .on("mouseout", function (e, d) {
-                tooltip.style("opacity", 0);
-
-                const descendants = d.descendants();
-
-                svg.selectAll('path')
-                    .filter((nd) => nd === d || descendants.includes(nd))
-                    .classed("highlighted", false)
-                    .attr("transform", null)
-                    .style("stroke-width", 1)
-                    .style("fill", x => {
-                        let fillColor = getColorScale()(x.depth);
-                        if (x.depth === 0) {
-                            fillColor = 'black';
-                        }
-
-                        return fillColor;
-                    });
-            })
-            .on("click", function (e, d) {
-                console.log(d);
-            });
+        renderSunburst();
     }, []);
 
     return (

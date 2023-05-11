@@ -191,6 +191,7 @@ var renderGraph = (svg, selections, onSelect) => {
                 .attr("x", d => { return xScale(d.data.key) - barWidth / 8; })
                 .style('fill', '#318CE7');
         }).on("mouseout", function (e, d) {
+            tooltip.style("opacity", 0);
             d3.select(this)
                 .classed('highlighted', false)
                 .attr("width", barWidth)
