@@ -22,7 +22,7 @@ const SELECTED_COLOR = 'rgba(109, 6, 189, 0.25)';
 const NONE_COLOR = 'rgba(0,0,0,0.0)';
 const HIGHLIGHT_COLOR = 'rgba(18, 106, 181,0.45)';
 
-const margin = { top: 70, bottom: 70, left: 70, right: 70 };
+const margin = { top: 70, bottom: 70, left: 120, right: 70 };
 const graph_width = 1500, graph_height = 650;
 
 const selectedVariableX = "review rate number";
@@ -55,11 +55,11 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
         .attr("text-anchor", "end")
         .attr("x", graph_width / 2.5)
         .style("fill", "white")
-        .attr("y", graph_height - margin.bottom + 15)
+        .attr("y", graph_height - margin.bottom + 30)
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr("font-weight", "bold")
-        .attr("font-size", "20px")
-        .text("Rating");
+        .style("font-weight", "bold")
+        .style("font-size", "25px")
+        .text("Rating —>");
 
     graph.append("text")
         .attr("class", "y-axis-label")
@@ -67,9 +67,10 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
         .style("fill", "white")
         .attr("transform", "rotate(-90)")
         .attr("y", -70)
-        .attr("font-weight", "bold")
-        .attr("font-size", "20px")
-        .text("Price");
+        .attr("x", -80)
+        .style("font-weight", "bold")
+        .style("font-size", "25px")
+        .text("Price —>");
 
     d3.axisLeft(yScale)(yAxis);
     d3.axisBottom(xScale)(xAxis);

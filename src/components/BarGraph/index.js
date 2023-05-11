@@ -8,7 +8,7 @@ import { getData } from "../../api";
 import StyledSVG from "./style";
 
 
-const margin = { top: 70, bottom: 70, left: 40, right: 70 };
+const margin = { top: 65, bottom: 70, left: 100, right: 70 };
 const width = 600, height = 500;
 
 const xLabel = "Year Range";
@@ -40,11 +40,11 @@ const makeAxes = (svg) => {
         .attr("text-anchor", "end")
         .attr("x", width / 2.5)
         .style("fill", "white")
-        .attr("y", height - margin.bottom + 15)
+        .attr("y", height - margin.bottom + 25)
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr("font-weight", "bold")
-        .attr("font-size", "18px")
-        .text(xLabel);
+        .style("font-weight", "bold")
+        .style("font-size", "21px")
+        .text("Year Range —>");
 
     graph.append("text")
         .attr("class", "y-axis-label")
@@ -52,9 +52,10 @@ const makeAxes = (svg) => {
         .style("fill", "white")
         .attr("transform", "rotate(-90)")
         .attr("y", -70)
-        .attr("font-weight", "bold")
-        .attr("font-size", "18px")
-        .text(yLabel);
+        .attr("x", -80)
+        .style("font-weight", "bold")
+        .style("font-size", "23px")
+        .text("Frequency —>");
 };
 
 let roomTypeStringRep = (roomType) => {
@@ -247,7 +248,7 @@ var renderGraph = (svg, data, selections, onSelect) => {
         });
     const legend = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${margin.left + 700}, ${margin.top + 10})`);
+        .attr("transform", `translate(${margin.left + 625}, ${margin.top + 10})`);
 
     legend.selectAll("rect")
         .data(ROOM_TYPES)
