@@ -203,6 +203,13 @@ const renderSunburst = (svg, selections, onSelect) => {
             tooltip.style("left", svgPosRect.right + WIDTH / 3 + "px")
                 .style("top", svgPosRect.top - HEIGHT / 2 + "px");
 
+            if (d.data.name === "root") {
+                d3.select(this)
+                    .classed("highlighted", true);
+
+                return;
+            }
+
             const descendants = d.descendants();
 
             svg.selectAll('path')
@@ -215,6 +222,13 @@ const renderSunburst = (svg, selections, onSelect) => {
         })
         .on("mouseout", function (e, d) {
             tooltip.style("opacity", 0);
+
+            if (d.data.name === "root") {
+                d3.select(this)
+                    .classed("highlighted", false);
+
+                return;
+            }
 
             const descendants = d.descendants();
 
