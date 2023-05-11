@@ -7,7 +7,7 @@ import MDSPlot from "../MDSPlot";
 
 import dataSet from './scatterdata.json';
 
-import { StyledUpperLayout, StyledLowerLayout, StyledContent, StyledVerticalLine, Title } from "./style";
+import { StyledUpperLayout, StyledLowerLayout, StyledContent, StyledVerticalLine, Title, GraphTitle, StyledPlot } from "./style";
 
 const FILTER_TYPES = {
     MAP: "MAP",
@@ -41,17 +41,23 @@ const UpperLayout = ({ onFilterChange, versions, ...rest }) => {
 
     return (
         <StyledUpperLayout>
-            <Map
-                {...rest}
-                onFilterChange={onMapItemsChange}
-                version={versions[FILTER_INDEX[FILTER_TYPES.MAP]]}
-            />
+            <StyledPlot>
+                <GraphTitle>Map</GraphTitle>
+                <Map
+                    {...rest}
+                    onFilterChange={onMapItemsChange}
+                    version={versions[FILTER_INDEX[FILTER_TYPES.MAP]]}
+                />
+            </StyledPlot>
             <StyledVerticalLine />
-            <ScatterPlot
-                {...rest}
-                onFilterChange={onScatterPlotChange}
-                version={versions[FILTER_INDEX[FILTER_TYPES.SCATTER_PLOT]]}
-            />
+            <StyledPlot>
+                <GraphTitle>Scatter Plot</GraphTitle>
+                <ScatterPlot
+                    {...rest}
+                    onFilterChange={onScatterPlotChange}
+                    version={versions[FILTER_INDEX[FILTER_TYPES.SCATTER_PLOT]]}
+                />
+            </StyledPlot>
         </StyledUpperLayout>
     )
 };
@@ -67,25 +73,34 @@ const LowerLayout = ({ onFilterChange, versions, ...rest }) => {
 
     return (
         <StyledLowerLayout>
-            <MDSPlot />
+            <StyledPlot>
+                <GraphTitle>MDS Plot</GraphTitle>
+                <MDSPlot />
+            </StyledPlot>
             <StyledVerticalLine />
-            <BarGraph
-                {...rest}
-                onFilterChange={onBarGraphChange}
-                version={versions[FILTER_INDEX[FILTER_TYPES.BAR_GRAPH]]} />
+            <StyledPlot>
+                <GraphTitle>Stacked Bar Graph</GraphTitle>
+                <BarGraph
+                    {...rest}
+                    onFilterChange={onBarGraphChange}
+                    version={versions[FILTER_INDEX[FILTER_TYPES.BAR_GRAPH]]} />
+            </StyledPlot>
             <StyledVerticalLine />
-            <SunBurst
-                {...rest}
-                onFilterChange={onSunBurstChange}
-                version={versions[FILTER_INDEX[FILTER_TYPES.SUN_BURST]]}
-            />
+            <StyledPlot>
+                <GraphTitle>Sun Burst</GraphTitle>
+                <SunBurst
+                    {...rest}
+                    onFilterChange={onSunBurstChange}
+                    version={versions[FILTER_INDEX[FILTER_TYPES.SUN_BURST]]}
+                />
+            </StyledPlot>
         </StyledLowerLayout>
     )
 };
 
 const Layout = props => (
     <StyledContent>
-        <Title>Title</Title>
+        <Title>NYC Airbnb: A Data-Driven Stay</Title>
         <UpperLayout {...props} />
         <LowerLayout {...props} />
     </StyledContent>
