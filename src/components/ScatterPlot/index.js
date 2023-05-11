@@ -150,7 +150,7 @@ const ScatterPlot = ({ data: allData, version, onFilterChange = () => undefined 
         return () => {
             svg.selectAll('*').remove();
         };
-    }, [selectedRating, handleSelect]);
+    }, [selectedRating, handleSelect, scatterPlotData, yScale]);
 
     return (
         <StyledSVG id="scatterplot" width="1000" height="850" />

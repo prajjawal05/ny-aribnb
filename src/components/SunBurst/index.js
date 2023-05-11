@@ -9,10 +9,6 @@ const WIDTH = 500, HEIGHT = 500;
 const RADIUS = Math.min(WIDTH, HEIGHT) / 2;
 const partition = d3.partition().size([2 * Math.PI, RADIUS]);
 
-function getRandomArbitrary(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
 const addAngles = (parent, children) => {
     let start = parent.prev;
     for (const child of children) {
@@ -282,7 +278,7 @@ const renderSunburst = (rootData, svg, selections, onSelect) => {
             onSelect(parseDataForSelection(d));
         });
 
-    const legendData = [{"label":"Price Range($)", "depth":1},{"label":"Instant Bookable?", "depth":2},{"label":"Cancellation Policy", "depth":3}]
+    const legendData = [{ "label": "Price Range($)", "depth": 1 }, { "label": "Instant Bookable?", "depth": 2 }, { "label": "Cancellation Policy", "depth": 3 }]
 
     const legend = svg.append("g")
         .attr("class", "legend")
@@ -403,7 +399,7 @@ const SunBurst = ({ data: allData, version, onFilterChange: onSelect = select =>
             onSelect(newSelection);
             return newSelection;
         })
-    }, []);
+    }, [updateSelections, onSelect]);
 
     const rootData = useMemo(() => {
         const graphDataV2 = getGraphData(data);
@@ -429,7 +425,7 @@ const SunBurst = ({ data: allData, version, onFilterChange: onSelect = select =>
         return () => {
             svg.selectAll('*').remove();
         };
-    }, [selections, handleSelect]);
+    }, [rootData, selections, handleSelect]);
 
     return (
         <StyledBurst>
