@@ -4,11 +4,13 @@ import BarGraph from "../BarGraph";
 import ScatterPlot from "../ScatterPlot";
 import SunBurst from "../SunBurst";
 import MDSPlot from "../MDSPlot";
+import { RedoOutlined } from '@ant-design/icons';
 
 import dataSet from './scatterdata.json';
 
 import { StyledUpperLayout, StyledLowerLayout, StyledContent, StyledVerticalLine, Title, GraphTitle, StyledPlot } from "./style";
 import { removeKeyFromObject } from "../../utils";
+import { randomBates } from "d3";
 
 const FILTER_TYPES = {
     MAP: "MAP",
@@ -116,7 +118,20 @@ const LowerLayout = ({ onFilterChange, filters, ...rest }) => {
 
 const Layout = props => (
     <StyledContent>
-        <Title>NYC Airbnb: A Data-Driven Stay</Title>
+        <Title>NYC Airbnb: A Data-Driven Stay
+            <button title="Refresh"
+            style={{
+                background: 'rgba(48,49,52,0.59)',
+                border: '2px solid grey',
+                borderRadius: '15px',
+                cursor: 'pointer',
+                fontSize: '50px',
+                padding: '11px 8px 11px 8px',
+                margin: '0 0 0 50px',
+            }}>
+            <RedoOutlined style={{ color: 'white' }} />
+        </button>
+        </Title>
         <UpperLayout {...props} />
         <LowerLayout {...props} />
     </StyledContent>
