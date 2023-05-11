@@ -233,17 +233,22 @@ const renderMapSvg = (svg, boroFreq, selectedRgns, onSelect) => {
         .style("fill", "rgb(255,255,255");
 };
 
-const Map = ({ filters, onFilterChange = () => undefined }) => {
+const Map = ({ filters, filtersResetVersion, onFilterChange = () => undefined }) => {
     const [selectedRegions, updateSelectedRegions] = useState([]);
     const [data, onDataUpdate] = useState([]);
 
+    const fetchData = useCallback(async () => {
+        const filteredData = await getData(filters);
+        onDataUpdate(filteredData);
+    }, [filters, onDataUpdate])
+
     useEffect(() => {
-        async function fetchData() {
-            const filteredData = await getData(filters);
-            onDataUpdate(filteredData);
-        }
         fetchData();
     }, [JSON.stringify(filters)]);
+
+    useEffect(() => {
+        updateSelectedRegions([]);
+    }, [filtersResetVersion]);
 
     const handleSelect = useCallback(rgn => {
         updateSelectedRegions(selectedRgns => {

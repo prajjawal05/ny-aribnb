@@ -381,17 +381,22 @@ const parseDataForSelection = d => {
 }
 
 
-const SunBurst = ({ filters, onFilterChange: onSelect = () => undefined }) => {
+const SunBurst = ({ filters, filtersResetVersion, onFilterChange: onSelect = () => undefined }) => {
     const [selections, updateSelections] = useState([]);
     const [data, onDataUpdate] = useState([]);
 
+    const fetchData = useCallback(async () => {
+        const filteredData = await getData(filters);
+        onDataUpdate(filteredData);
+    }, [filters, onDataUpdate])
+
     useEffect(() => {
-        async function fetchData() {
-            const filteredData = await getData(filters);
-            onDataUpdate(filteredData);
-        }
         fetchData();
     }, [JSON.stringify(filters)]);
+
+    useEffect(() => {
+        updateSelections([]);
+    }, [filtersResetVersion]);
 
     const handleSelect = useCallback(rgn => {
         updateSelections(prevSelections => {

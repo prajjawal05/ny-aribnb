@@ -142,7 +142,7 @@ const Layout = ({ onResetFilters, ...props }) => (
 
 const Content = () => {
     const [filters, updateFilters] = useState(DEFAULT_FILTERS);
-    const [filtersVersion, updateFiltersVersion] = useState(0);
+    const [filtersResetVersion, updateFiltersResetVersion] = useState(0);
 
     const onFilterChange = useCallback((type, value) => {
         updateFilters(prevFilter => {
@@ -151,11 +151,13 @@ const Content = () => {
     }, []);
 
     const onResetFilters = useCallback(() => {
-        updateFilters(DEFAULT_FILTERS)
+        updateFiltersResetVersion(prevVersion => prevVersion + 1);
+        updateFilters(DEFAULT_FILTERS);
     }, [updateFilters]);
 
     return <Layout
         filters={filters}
+        filtersResetVersion={filtersResetVersion}
         onFilterChange={onFilterChange}
         onResetFilters={onResetFilters}
     />

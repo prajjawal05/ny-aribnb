@@ -195,18 +195,22 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
 };
 
 
-const ScatterPlot = ({ filters, onFilterChange = () => undefined }) => {
+const ScatterPlot = ({ filters, filtersResetVersion, onFilterChange = () => undefined }) => {
     const [selectedRating, updateSelections] = useState([]);
     const [data, onDataUpdate] = useState([]);
 
+    const fetchData = useCallback(async () => {
+        const filteredData = await getData(filters);
+        onDataUpdate(filteredData);
+    }, [filters, onDataUpdate])
+
     useEffect(() => {
-        async function fetchData() {
-            const filteredData = await getData(filters);
-            onDataUpdate(filteredData);
-        }
         fetchData();
     }, [JSON.stringify(filters)]);
 
+    useEffect(() => {
+        updateSelections([]);
+    }, [filtersResetVersion]);
 
     const handleSelect = useCallback(item => {
         updateSelections(selections => {
