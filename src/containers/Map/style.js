@@ -17,6 +17,10 @@ const StyledMap = styled.div`
         stroke: black;
         stroke-width: 2px;
     }
+
+    .disabledArea {
+        cursor: not-allowed;
+    }
 `;
 
 export default StyledMap;

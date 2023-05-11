@@ -116,21 +116,24 @@ const LowerLayout = ({ onFilterChange, filters, ...rest }) => {
     )
 };
 
-const Layout = props => (
+const Layout = ({ onResetFilters, ...props }) => (
     <StyledContent>
         <Title>NYC Airbnb: A Data-Driven Stay
             <button title="Refresh"
-            style={{
-                background: 'rgba(48,49,52,0.59)',
-                border: '2px solid grey',
-                borderRadius: '15px',
-                cursor: 'pointer',
-                fontSize: '50px',
-                padding: '11px 8px 11px 8px',
-                margin: '0 0 0 50px',
-            }}>
-            <RedoOutlined style={{ color: 'white' }} />
-        </button>
+                style={{
+                    background: 'rgba(48,49,52,0.59)',
+                    border: '2px solid grey',
+                    borderRadius: '15px',
+                    cursor: 'pointer',
+                    fontSize: '50px',
+                    padding: '11px 8px 11px 8px',
+                    margin: '0 0 0 50px',
+                    float: 'right'
+                }}
+                onClick={onResetFilters}
+            >
+                <RedoOutlined style={{ color: 'white' }} />
+            </button>
         </Title>
         <UpperLayout {...props} />
         <LowerLayout {...props} />
@@ -139,6 +142,7 @@ const Layout = props => (
 
 const Content = () => {
     const [filters, updateFilters] = useState(DEFAULT_FILTERS);
+    const [filtersVersion, updateFiltersVersion] = useState(0);
 
     const onFilterChange = useCallback((type, value) => {
         updateFilters(prevFilter => {
@@ -146,9 +150,14 @@ const Content = () => {
         })
     }, []);
 
+    const onResetFilters = useCallback(() => {
+        updateFilters(DEFAULT_FILTERS)
+    }, [updateFilters]);
+
     return <Layout
         filters={filters}
         onFilterChange={onFilterChange}
+        onResetFilters={onResetFilters}
     />
 }
 

@@ -17,6 +17,7 @@ const mapData = {
 const SELECTED_COLOR = '#126ab5';
 // const HOVERED_SELECTED_COLOR = '#C2B280';
 const HOVERED_SELECTED_COLOR = '#e89a4a';
+const EMPTY_COLOR = '#676970';
 
 const getBoroughDataFromMap = d => d.properties.boro_code;
 
@@ -77,11 +78,15 @@ const renderMapSvg = (svg, boroFreq, selectedRgns, onSelect) => {
         .append("path")
         .attr("d", path)
         .style("fill", function (d) {
+            if (!boroFreq[getBoroughDataFromMap(d)]) {
+                return EMPTY_COLOR;
+            }
             if (isRegionSelected(d, selectedRgns)) {
                 return HOVERED_SELECTED_COLOR;
             }
             return getColorScale()(colorMap[getBoroughDataFromMap(d)]);
         })
+        .classed("disabledArea", d => !boroFreq[getBoroughDataFromMap(d)])
         .classed("selected", d => isRegionSelected(d, selectedRgns))
         .on("mouseover", function (event, d) {
             this.parentNode.appendChild(this);
@@ -117,7 +122,7 @@ const renderMapSvg = (svg, boroFreq, selectedRgns, onSelect) => {
                             textAlign: "center",
                             fontSize: "19px",
                         }}>
-                            ({boroFreq[getBoroughDataFromMap(d)]})
+                            {!!boroFreq[getBoroughDataFromMap(d)] && (boroFreq[getBoroughDataFromMap(d)])}
                         </div>
                     </div>
                 )
@@ -126,16 +131,30 @@ const renderMapSvg = (svg, boroFreq, selectedRgns, onSelect) => {
             tooltip.style("left", event.x + 40 + "px")
                 .style("top", event.y + 40 + "px");
 
-            const fillColor = SELECTED_COLOR;
+            console.log(boroFreq[getBoroughDataFromMap(d)]);
+            if (!boroFreq[getBoroughDataFromMap(d)]) {
+                d3.select(this)
+                    .style("fill", EMPTY_COLOR);
+
+                return;
+            }
 
             d3.select(this)
                 .classed("highlighted", true)
                 // .attr("transform", "scale(1.2) translate(-35, -35)")
-                .style("fill", fillColor);
+                .style("fill", SELECTED_COLOR);
 
         })
         .on("mouseout", function (e, d) {
             tooltip.style("opacity", 0);
+
+            if (!boroFreq[getBoroughDataFromMap(d)]) {
+                d3.select(this)
+                    .style("fill", EMPTY_COLOR);
+
+                return;
+            }
+
             const fillColor = isRegionSelected(d, selectedRgns) ? HOVERED_SELECTED_COLOR : getColorScale()(colorMap[getBoroughDataFromMap(d)]);
             d3.select(this)
                 .classed("highlighted", false)
@@ -143,6 +162,10 @@ const renderMapSvg = (svg, boroFreq, selectedRgns, onSelect) => {
                 .style("fill", fillColor);
         })
         .on("click", function (e, d) {
+            if (!boroFreq[getBoroughDataFromMap(d)]) {
+                return;
+            }
+
             onSelect(getBoroughDataFromMap(d));
         });
 
