@@ -33,8 +33,8 @@ const assignOrderForFreqMap = () => {
     const entries = Object.entries(boroFreq);
     // console.log(entries);
     entries.sort((a, b) => a[1] - b[1]);
-    for(let i=1;i<=entries.length;i++) {
-        entries[i-1][1]=i;
+    for (let i = 1; i <= entries.length; i++) {
+        entries[i - 1][1] = i;
     }
     const sortedObj = Object.fromEntries(entries);
 
@@ -47,7 +47,7 @@ const getHighlightedColorScale = () => {
 }
 
 const getColorScale = () => {
-    const myColors = ["#ffbaba","#ff7b7b","#cb1c1e","#a70000","#7f1010"];
+    const myColors = ["#ffbaba", "#ff7b7b", "#cb1c1e", "#a70000", "#7f1010"];
 
     const myInterpolator = d3.interpolateRgbBasis(myColors);
 
@@ -64,7 +64,6 @@ const isRegionSelected = (d, selectedRgns) => {
 
 const renderMapSvg = (selectedRgns, onSelect) => {
     const colorMap = assignOrderForFreqMap();
-    console.log(colorMap);
 
     const projection = d3.geoAlbers()
         .center([0, 40.66])
