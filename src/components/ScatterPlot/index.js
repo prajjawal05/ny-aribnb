@@ -10,12 +10,17 @@ const computeJitter = (bandwidth) => {
 }
 
 const getColorScale = () => {
-    return d3.scaleSequential(d3.interpolateReds).domain([0, 4]);
+    // const myColors = ["#ffbaba","#ff7b7b","#cb1c1e","#a70000","#7f1010"];
+
+    // const myInterpolator = d3.interpolateRgbBasis(myColors);
+
+    // return d3.scaleSequential().domain([1, 4]).interpolator(myInterpolator);
+    return d3.scaleSequential(d3.interpolateReds).domain([1, 5]);
 }
 
 const SELECTED_COLOR = 'rgba(106,200,64, 0.15)';
-const NONE_COLOR = 'rgba(0,0,0,0.002)';
-const HIGHLIGHT_COLOR = 'rgba(41,134,204,0.25)';
+const NONE_COLOR = 'rgba(0,0,0,0.0)';
+const HIGHLIGHT_COLOR = 'rgba(76,91,95,0.45)';
 
 const margin = { top: 70, bottom: 70, left: 70, right: 70 };
 const graph_width = 900, graph_height = 650;

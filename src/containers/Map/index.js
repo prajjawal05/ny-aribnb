@@ -13,8 +13,9 @@ const mapData = {
     features: boundaryData.features.filter(({ properties: { boro_name } }) => borroughs.includes(boro_name)),
 }
 
-const SELECTED_COLOR = '#318CE7';
-const HOVERED_SELECTED_COLOR = '#C2B280';
+const SELECTED_COLOR = '#126ab5';
+// const HOVERED_SELECTED_COLOR = '#C2B280';
+const HOVERED_SELECTED_COLOR = '#e89a4a';
 
 const getBoroughDataFromMap = d => d.properties.boro_code;
 
@@ -28,14 +29,32 @@ const boroFreq = data.reduce(
         return acc;
     }, {});
 
+const assignOrderForFreqMap = () => {
+    const entries = Object.entries(boroFreq);
+    // console.log(entries);
+    entries.sort((a, b) => a[1] - b[1]);
+    for(let i=1;i<=entries.length;i++) {
+        entries[i-1][1]=i;
+    }
+    const sortedObj = Object.fromEntries(entries);
+
+    return sortedObj;
+}
+
 const getHighlightedColorScale = () => {
     return d3.scaleSequential(d3.interpolateBlues)
         .domain([0, d3.max(Object.values(boroFreq))]);
 }
 
 const getColorScale = () => {
-    return d3.scaleSequential(d3.interpolateReds)
-        .domain([0, d3.max(Object.values(boroFreq))]);
+    const myColors = ["#ffbaba","#ff7b7b","#cb1c1e","#a70000","#7f1010"];
+
+    const myInterpolator = d3.interpolateRgbBasis(myColors);
+
+    return d3.scaleSequential().domain([0, 5]).interpolator(myInterpolator);
+    // return d3.scaleSequential().domain([1, 5]).range(["#ffbaba","#ff7b7b","#cb1c1e","#a70000","#7f1010"])
+    // return d3.scaleSequential(d3.interpolateReds)
+    //     .domain([0, d3.max(Object.values(boroFreq))]);
 }
 
 const isRegionSelected = (d, selectedRgns) => {
@@ -44,6 +63,9 @@ const isRegionSelected = (d, selectedRgns) => {
 }
 
 const renderMapSvg = (selectedRgns, onSelect) => {
+    const colorMap = assignOrderForFreqMap();
+    console.log(colorMap);
+
     const projection = d3.geoAlbers()
         .center([0, 40.66])
         .rotate([74, 0])
@@ -77,7 +99,7 @@ const renderMapSvg = (selectedRgns, onSelect) => {
             if (isRegionSelected(d, selectedRgns)) {
                 return HOVERED_SELECTED_COLOR;
             }
-            return getColorScale()(boroFreq[getBoroughDataFromMap(d)]);
+            return getColorScale()(colorMap[getBoroughDataFromMap(d)]);
         })
         .classed("selected", d => isRegionSelected(d, selectedRgns))
         .on("mouseover", function (event, d) {
@@ -107,7 +129,7 @@ const renderMapSvg = (selectedRgns, onSelect) => {
         })
         .on("mouseout", function (e, d) {
             tooltip.style("opacity", 0);
-            const fillColor = isRegionSelected(d, selectedRgns) ? HOVERED_SELECTED_COLOR : getColorScale()(boroFreq[getBoroughDataFromMap(d)]);
+            const fillColor = isRegionSelected(d, selectedRgns) ? HOVERED_SELECTED_COLOR : getColorScale()(colorMap[getBoroughDataFromMap(d)]);
             d3.select(this)
                 .classed("highlighted", false)
                 .attr("transform", null)
