@@ -173,10 +173,12 @@ const getColorScale = () => {
     return d3.scaleSequential().domain([0, 5]).interpolator(myInterpolator);
 }
 
+const rootData = partition(root).descendants();
+
 const renderSunburst = (svg, selections, onSelect) => {
 
     const svgPosRect = svg.node().getBoundingClientRect();
-    const g = svg.selectAll("g").data(partition(root).descendants());
+    const g = svg.selectAll("g").data(rootData);
 
     g.enter()
         .append("g")
@@ -196,12 +198,12 @@ const renderSunburst = (svg, selections, onSelect) => {
             return 1;
         })
         .on("mouseover", function (e, d) {
-            this.parentNode.appendChild(this);
+            // this.parentNode.appendChild(this);
             tooltip.style("opacity", 1);
             tooltip.html(`${d.data.name} (${d.data.value})`);
 
-            tooltip.style("left", svgPosRect.right + WIDTH / 3 + "px")
-                .style("top", svgPosRect.top - HEIGHT / 2 + "px");
+            tooltip.style("left", e.x + 40 + "px")
+                .style("top", e.y + 40 + "px");
 
             if (d.data.name === "root") {
                 d3.select(this)
@@ -291,7 +293,6 @@ const SunBurst = ({ onSelect = select => undefined }) => {
 
             const newSelection = getNewSelection(prevSelections, rgn);
             onSelect(newSelection);
-            console.log(newSelection);
             return newSelection;
         })
     }, []);
