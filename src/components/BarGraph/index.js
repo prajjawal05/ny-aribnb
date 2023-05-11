@@ -171,7 +171,9 @@ var renderGraph = (svg, selections, onSelect) => {
                         <div style={{ height: "150px", display: "flex", justifyContent: "center", fontSize: "16px" }}>
                             {ROOM_TYPES.map(type => (
                                 <>
-                                    <svg><circle cx="10" cy="10" r="5" stroke="black" stroke-width="3" fill="red" /></svg> <br /> {type} ({d.data[type]})<br />
+                                    <svg><circle cx="10" cy="10" r="5" stroke="black" stroke-width="2" fill="red" /></svg>
+                                    <br />
+                                    {type} ({d.data[type]})<br />
                                 </>
                             ))
                             }
