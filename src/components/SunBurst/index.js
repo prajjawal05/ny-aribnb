@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 
+import ReactDomServer from 'react-dom/server';
+
 import StyledBurst from './style';
 
 const WIDTH = 500, HEIGHT = 500;
@@ -159,11 +161,17 @@ var tooltip = d3.select("body")
 // .style('width', '200px');
 
 const getColorScale = () => {
-    const myColors = ["#ffbaba", "#ff7b7b", "f22929", "#cb1c1e", "#a70000", "#7f1010",];
-
+    const myColors = ["#ffbaba", d3.interpolate("#ffbaba", "#cb1c1e")(0.33), d3.interpolate("#ffbaba", "#cb1c1e")(0.67), "#cb1c1e"]//, "#cb1c1e", "#7f1010"];
     const myInterpolator = d3.interpolateRgbBasis(myColors);
 
-    return d3.scaleSequential().domain([0, 5]).interpolator(myInterpolator);
+    return d3.scaleSequential().domain([0, 3]).interpolator(myInterpolator);
+}
+
+const getSelectedColorScale = () => {
+    const myColors = ["#ead2ac", "#e89a4a", "#7a4a1d"];
+    const myInterpolator = d3.interpolateRgbBasis(myColors);
+
+    return d3.scaleSequential().domain([0, 3]).interpolator(myInterpolator);
 }
 
 
@@ -177,7 +185,7 @@ const renderSunburst = (rootData, svg, selections, onSelect) => {
         .attr("d", arc)
         .style("fill", (d) => {
             if (isRegionSelected(d, selections)) {
-                return getColorScale()(d.depth + 3);
+                return getSelectedColorScale()(d.depth);
             }
             return getColorScale()(d.depth);
         })
@@ -190,7 +198,41 @@ const renderSunburst = (rootData, svg, selections, onSelect) => {
         .on("mouseover", function (e, d) {
             // this.parentNode.appendChild(this);
             tooltip.style("opacity", 1);
-            tooltip.html(`${d.data.name} (${d.data.value})`);
+            tooltip.html(
+                ReactDomServer.renderToString(
+                    <div style={{
+                        width: "200px",
+                        height: "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "10px",
+                        backgroundColor: "#333333",
+                        color: "#ffffff",
+                        borderRadius: "5px",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.3)",
+                        fontSize: "14px",
+                        fontFamily: "Arial, sans-serif",
+                        lineHeight: "1.4em",
+                    }}>
+                        <div style={{
+                            marginBottom: "10px",
+                            fontWeight: "bold",
+                            fontSize: "18px",
+                            textShadow: "1px 1px #000000",
+                        }}>
+                            {(d.data.name)}
+                        </div>
+                        <div style={{
+                            textAlign: "center",
+                            fontSize: "19px",
+                        }}>
+                            {d.data.value}
+                        </div>
+                    </div>
+                )
+            );
 
             tooltip.style("left", e.x + 40 + "px")
                 .style("top", e.y + 40 + "px");
@@ -231,7 +273,7 @@ const renderSunburst = (rootData, svg, selections, onSelect) => {
                 .style("stroke-width", 1)
                 .style("fill", x => {
                     if (isRegionSelected(x, selections)) {
-                        return getColorScale()(x.depth + 3);
+                        return getSelectedColorScale()(x.depth);
                     }
                     return getColorScale()(x.depth);
                 });
@@ -239,6 +281,75 @@ const renderSunburst = (rootData, svg, selections, onSelect) => {
         .on("click", function (e, d) {
             onSelect(parseDataForSelection(d));
         });
+
+    const legendData = [{"label":"Price Range($)", "depth":1},{"label":"Instant Bookable?", "depth":2},{"label":"Cancellation Policy", "depth":3}]
+
+    const legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(${0}, ${0})`);
+
+    legend.selectAll("rect")
+        .data(legendData)
+        .enter()
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 25 + 10) // adjust y-coordinate
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", d => getColorScale()(d.depth))
+        .style("stroke", "#ffffff")
+        .style("stroke-width", "1px");
+
+    legend.selectAll("text")
+        .data(legendData)
+        .enter()
+        .append("text")
+        .attr("x", 30)
+        .attr("y", (d, i) => i * 25 + 25)
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .style("fill", "#ffffff")
+        .style("text-shadow", "1px 1px #000000")
+        .text(d => d.label);
+
+    legend.append("text")
+        .attr("x", 15)
+        .attr("y", 100 + 12)
+        .style("font-size", "18px")
+        .style("font-weight", "bold")
+        .style("fill", "#ffffff")
+        .style("text-shadow", "1px 1px #000000")
+        .text("After Selection");
+
+    for (let i = 0; i < 3; i++) {
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", (5 + i) * 25 + 10)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", getSelectedColorScale()(legendData[i].depth))
+            .style("stroke", "#ffffff")
+            .style("stroke-width", "1px");
+
+        legend.append("text")
+            .attr("x", 30)
+            .attr("y", (5 + i) * 25.7 + 19)
+            .style("font-size", "15px")
+            .style("font-weight", "bold")
+            .style("fill", "#ffffff")
+            .style("text-shadow", "1px 1px #000000")
+            .text(legendData[i].label);
+    }
+    // Add a background rectangle for the legend
+    legend.insert("rect", ":first-child")
+        .attr("x", -5)
+        .attr("y", -5)
+        .attr("width", 180)
+        .attr("height", (3 * 2 + 1) * 25 + 50)
+        .attr("fill", "#4B5A5E")
+        .style("opacity", 0.87)
+        .style("stroke", "#ffffff")
+        .style("stroke-width", "2px");
 }
 
 const isRegionSelected = (d, selections) => {

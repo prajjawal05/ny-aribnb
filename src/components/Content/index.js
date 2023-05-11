@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-
 import Map from "../../containers/Map";
 import BarGraph from "../BarGraph";
 import ScatterPlot from "../ScatterPlot";
@@ -8,7 +7,7 @@ import MDSPlot from "../MDSPlot";
 
 import dataSet from './scatterdata.json';
 
-import { StyledUpperLayout, StyledLowerLayout, StyledContent } from "./style";
+import { StyledUpperLayout, StyledLowerLayout, StyledContent, StyledVerticalLine, Title } from "./style";
 
 const FILTER_TYPES = {
     MAP: "MAP",
@@ -47,6 +46,7 @@ const UpperLayout = ({ onFilterChange, versions, ...rest }) => {
                 onFilterChange={onMapItemsChange}
                 version={versions[FILTER_INDEX[FILTER_TYPES.MAP]]}
             />
+            <StyledVerticalLine />
             <ScatterPlot
                 {...rest}
                 onFilterChange={onScatterPlotChange}
@@ -68,10 +68,12 @@ const LowerLayout = ({ onFilterChange, versions, ...rest }) => {
     return (
         <StyledLowerLayout>
             <MDSPlot />
+            <StyledVerticalLine />
             <BarGraph
                 {...rest}
                 onFilterChange={onBarGraphChange}
                 version={versions[FILTER_INDEX[FILTER_TYPES.BAR_GRAPH]]} />
+            <StyledVerticalLine />
             <SunBurst
                 {...rest}
                 onFilterChange={onSunBurstChange}
@@ -83,6 +85,7 @@ const LowerLayout = ({ onFilterChange, versions, ...rest }) => {
 
 const Layout = props => (
     <StyledContent>
+        <Title>Title</Title>
         <UpperLayout {...props} />
         <LowerLayout {...props} />
     </StyledContent>
