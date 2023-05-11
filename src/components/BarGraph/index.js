@@ -1,6 +1,6 @@
 import data from "../ScatterPlot/scatterdata.json";
 import * as d3 from "d3";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 import StyledSVG from "./style";
 
@@ -77,8 +77,17 @@ var createList = (data, selectedVariable) => {
     return freqMap
 }
 
-var renderGraph = () => {
-    const svg = d3.select('#bar-graph');
+const isSelected = (selections, item) => {
+    for (const rgn of selections) {
+        if (item.key == rgn.key && item.roomType == rgn.roomType) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+var renderGraph = (svg, selections, onSelect) => {
     const attribute = "year_range";
     const graphData = createList(data, attribute);
 
@@ -107,6 +116,11 @@ var renderGraph = () => {
         .domain(["Private_room", "Entire_home_apt", "Hotel_room", "Shared_room"])
         .range([d3.interpolateReds(1), d3.interpolateReds(0.75), d3.interpolateReds(0.5), d3.interpolateReds(0.25)]);
 
+
+    const colorSelected = d3.scaleOrdinal()
+        .domain(["Private_room", "Entire_home_apt", "Hotel_room", "Shared_room"])
+        .range([d3.interpolateGreens(1), d3.interpolateGreens(0.75), d3.interpolateGreens(0.5), d3.interpolateGreens(0.25)]);
+
     const barWidth = xScale.bandwidth();
     barGroup.selectAll("g")
         .data(stackedData)
@@ -118,26 +132,64 @@ var renderGraph = () => {
         .attr("x", d => { return xScale(d.data.key); })
         .attr("y", d => { return yScale(d[1]); })
         .attr("width", barWidth)
-        .attr("height", d => { return (yScale(d[0]) - yScale(d[1])) - 2; })
+        .attr("height", d => {
+            const height = (yScale(d[0]) - yScale(d[1]));
+            if (height > 5) {
+                return height - 2;
+            }
+
+            return height;
+        })
+        .style("fill", function (d) {
+            if (isSelected(selections, d.data)) {
+                return colorSelected(d.data.roomType);
+            }
+            return color(d.data.roomType);
+        })
         .on("mouseover", function (e, d) {
             d3.select(this)
                 .classed('highlighted', true)
                 .attr("width", barWidth * 1.25)
-                .attr("x", d => { return xScale(d.data.key) - barWidth / 8; });
+                .attr("x", d => { return xScale(d.data.key) - barWidth / 8; })
+                .style('fill', '#318CE7');
         }).on("mouseout", function (e, d) {
             d3.select(this)
                 .classed('highlighted', false)
                 .attr("width", barWidth)
-                .attr("x", d => { return xScale(d.data.key); });
+                .attr("x", d => { return xScale(d.data.key); })
+                .style('fill', isSelected(selections, d.data) ? colorSelected(d.data.roomType) : color(d.data.roomType));;
+        }).on("click", function (e, d) {
+            onSelect(d.data);
         });
-
-
 };
 
-const BarGraph = () => {
+const BarGraph = ({ onSelect = () => undefined }) => {
+    const [selections, updateSelections] = useState([]);
+
+    const handleSelect = useCallback(rgn => {
+        updateSelections(selectedRgns => {
+            let newRgn = [...selectedRgns];
+
+            if (isSelected(newRgn, rgn)) {
+                newRgn = newRgn.filter(item => item.key != rgn.key || item.roomType != rgn.roomType);
+            } else {
+                newRgn = [...newRgn, { ...rgn }];
+            }
+
+            onSelect(newRgn);
+            console.log(newRgn);
+            return newRgn;
+        });
+    });
+
     useEffect(() => {
-        renderGraph();
-    }, []);
+        const svg = d3.select('#bar-graph');
+        renderGraph(svg, selections, handleSelect);
+
+        return () => {
+            svg.selectAll('*').remove();
+        };
+    }, [selections, handleSelect]);
 
     return (
         <StyledSVG id="bar-graph" width="600" height="600" />
