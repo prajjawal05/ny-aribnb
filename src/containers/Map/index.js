@@ -57,7 +57,7 @@ var tooltip = d3.select("body")
     .style("background-color", "white")
     .style("font-size", "16px");
 
-const renderMapSvg = (boroFreq, selectedRgns, onSelect) => {
+const renderMapSvg = (svg, boroFreq, selectedRgns, onSelect) => {
     const colorMap = assignOrderForFreqMap(boroFreq);
 
     const projection = d3.geoAlbers()
@@ -69,9 +69,6 @@ const renderMapSvg = (boroFreq, selectedRgns, onSelect) => {
 
     const path = d3.geoPath()
         .projection(projection);
-
-
-    const svg = d3.select('#nycmap');
 
     svg.append("g")
         .selectAll("path")
@@ -184,14 +181,32 @@ const renderMapSvg = (boroFreq, selectedRgns, onSelect) => {
 
     const legendPath = svg.append("path")
         .attr("d", pathData)
-        .attr("fill", "url(#gradient)");
+        .attr("fill", "url(#gradient)")
+        .attr("transform", "translate(" + 30 + "," + height / 3.5 + ")");;
 
     const sizeLegendText = svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", height / 2)
+        .attr("x", 100)
+        .attr("y", height / 3.5 - 70)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "20")
+        .attr("font-weight", "bold")
+        .text("Number of Airbnbs")
+        .style("fill", "rgb(255,255,255");
+
+    const lowerText = svg.append("text")
+        .attr("x", 85)
+        .attr("y", height / 2 - 25)
         .attr("text-anchor", "middle")
         .attr("font-size", "16")
-        .text("Size Legend")
+        .text(d => d3.min(Object.values(boroFreq)))
+        .style("fill", "rgb(255,255,255");
+
+    const upperText = svg.append("text")
+        .attr("x", 85)
+        .attr("y", height / 3 - 55)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16")
+        .text(d => d3.max(Object.values(boroFreq)))
         .style("fill", "rgb(255,255,255");
 };
 
@@ -231,7 +246,12 @@ const Map = ({ filters, onFilterChange = () => undefined }) => {
         }, {}), [data]);
 
     useEffect(() => {
-        renderMapSvg(boroFreq, selectedRegions, handleSelect);
+        const svg = d3.select('#nycmap');
+        renderMapSvg(svg, boroFreq, selectedRegions, handleSelect);
+
+        return () => {
+            svg.selectAll('*').remove();
+        };
     }, [selectedRegions, handleSelect, boroFreq]);
 
     return (
