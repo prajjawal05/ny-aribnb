@@ -20,7 +20,7 @@ const Title = styled.p`
     font-size: 65px;
     color: white;
     margin: 0px;
-    background-image: linear-gradient( 179deg,  rgba(0,0,0,1) 9.2%, rgba(127,16,16,1) 93.9% );
+    background-image: linear-gradient( 180deg,  rgba(127,16,16,1) 19.2%, #cb1c1e 93.9% );
     border-left: 1px solid rgba(255,255,255,0.63);
     border-right: 1px solid rgba(255,255,255,0.63);
     border-top: 1px solid rgba(255,255,255,0.63);
