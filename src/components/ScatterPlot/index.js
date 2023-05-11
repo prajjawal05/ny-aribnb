@@ -165,11 +165,11 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
     const path = svg.append("path")
         .attr("d", pathData)
         .attr("fill", "url(#gradient)")
-        .attr("transform", "translate(" + 1300 + "," + height / 3 + ")");
+        .attr("transform", "translate(" + 1300 + "," + height / 3 + 10 + ")");
 
     const sizeLegendText = svg.append("text")
         .attr("x", 1350)
-        .attr("y", height / 3 - 70)
+        .attr("y", height / 3 - 60)
         .attr("text-anchor", "middle")
         .attr("font-size", "20")
         .attr("font-weight", "bold")
@@ -178,7 +178,7 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
 
     const lowerText = svg.append("text")
         .attr("x", 1360)
-        .attr("y", height / 2 + 15)
+        .attr("y", height / 2 + 25)
         .attr("text-anchor", "middle")
         .attr("font-size", "16")
         .text(d => d3.min(scatterPlotData, function (d) { return d.review; }))
@@ -186,11 +186,79 @@ const renderPlot = (selections, onSelect, scatterPlotData, svg, yScale) => {
 
     const upperText = svg.append("text")
         .attr("x", 1355)
-        .attr("y", height / 3 - 20)
+        .attr("y", height / 3 - 10)
         .attr("text-anchor", "middle")
         .attr("font-size", "16")
         .text(d => d3.max(scatterPlotData, function (d) { return d.review; }))
         .style("fill", "rgb(255,255,255");
+
+    const legendData = [{ "label": "Strict", "policy": 4 }, { "label": "Strict", "policy": 4 }, { "label": "Moderate", "policy": 3 }, { "label": "Flexible", "policy": 2 }]
+
+    const legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(1270, 0)`);
+
+    legend.append("text")
+        .attr("x", 15)
+        .attr("y", 20)
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .style("fill", "#ffffff")
+        .style("text-shadow", "1px 1px #000000")
+        .text("Cancellation Policy");
+
+    legend.selectAll("rect")
+        .data(legendData)
+        // .filter((d, i) => i !== 0)
+        .enter()
+        .append("rect")
+        .attr("x", 5)
+        .attr("y", (d, i) => i * 25 + 50) // adjust y-coordinate
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", (d, i) => {
+            if (i == 0) {
+                return '#4B5A5E';
+            }
+            return getColorScale()(d.policy)
+        })
+        .style("stroke", (d, i) => {
+            if (i == 0) {
+                return null;
+            }
+            return "#ffffff"
+        })
+        .style("stroke-width", (d, i) => {
+            if (i == 0) {
+                return null;
+            }
+            return "1px";
+        });
+
+    legend.selectAll("text")
+        .data(legendData)
+        .enter()
+        .append("text")
+        .attr("x", 35)
+        .attr("y", (d, i) => i * 25 + 65)
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .style("fill", "#ffffff")
+        .style("text-shadow", "1px 1px #000000")
+        .text(d => d.label);
+
+
+
+    // Add a background rectangle for the legend
+    legend.insert("rect", ":first-child")
+        .attr("x", -5)
+        .attr("y", -5)
+        .attr("width", 180)
+        .attr("height", (3 * 2 + 1) * 25)
+        .attr("fill", "#4B5A5E")
+        .style("opacity", 0.87)
+        .style("stroke", "#ffffff")
+        .style("stroke-width", "2px");
 
 };
 
