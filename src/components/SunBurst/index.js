@@ -102,7 +102,7 @@ const arc = d3
     .innerRadius((d) => {
         return d.y0;
     })
-    .outerRadius((d) => d.y1 - getRandomArbitrary(2, 10));
+    .outerRadius((d) => d.y1);
 
 const HOVER_COLOR = '#126ab5';
 
