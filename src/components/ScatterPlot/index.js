@@ -18,9 +18,9 @@ const getColorScale = () => {
     return d3.scaleSequential(d3.interpolateReds).domain([1, 5]);
 }
 
-const SELECTED_COLOR = 'rgba(106,200,64, 0.15)';
+const SELECTED_COLOR = 'rgba(109, 6, 189, 0.25)';
 const NONE_COLOR = 'rgba(0,0,0,0.0)';
-const HIGHLIGHT_COLOR = 'rgba(76,91,95,0.45)';
+const HIGHLIGHT_COLOR = 'rgba(18, 106, 181,0.45)';
 
 const margin = { top: 70, bottom: 70, left: 70, right: 70 };
 const graph_width = 900, graph_height = 650;
