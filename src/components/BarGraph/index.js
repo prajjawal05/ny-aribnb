@@ -151,7 +151,7 @@ var renderGraph = (svg, selections, onSelect) => {
 
     const colorSelected = d3.scaleOrdinal()
         .domain(ROOM_TYPES)
-        .range(["#4E6E81", "#070A52", "#FFBF9B", "#e89a4a"]);
+        .range(["#4E6E81", "#070A52", "#6d06bd", "#e89a4a"]);
     // const colorSelected = (_) => {return "#070A52"};
     // FFBF9B, 4E6E81, e89a4a
 
