@@ -9,7 +9,7 @@ import StyledSVG from "./style";
 
 
 const margin = { top: 70, bottom: 70, left: 70, right: 70 };
-const width = 500, height = 500;
+const width = 600, height = 500;
 
 const xLabel = "Year Range";
 const yLabel = "Frequency";
@@ -23,13 +23,15 @@ const makeAxes = (svg) => {
         .classed("xAxis", true)
         .style("color", "white")
         .attr("transform", "translate(" + margin.left + "," + (height + margin.top) + ")")
-        .call(d3.axisBottom(xScale));
+        .call(d3.axisBottom(xScale))
+        .style("font-size", "17px");
 
     svg.append("g")
         .classed("yAxis", true)
         .style("color", "white")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(d3.axisLeft(yScale))
+        .style("font-size", "17px");
 
     const graph = svg.append("g").attr("transform", "translate(" + 100 + "," + 100 + ")");
 
@@ -52,6 +54,19 @@ const makeAxes = (svg) => {
         .attr("font-weight", "bold")
         .text(yLabel);
 };
+
+let roomTypeStringRep = (roomType) => {
+    if (roomType === "Private_room") {
+        return "Private Room";
+    }
+    else if (roomType === "Hotel_room") {
+        return "Hotel Room";
+    }
+    else if (roomType === "Shared_room") {
+        return "Shared Room";
+    }
+    return "Entire Home/Apt";
+}
 
 var createList = (data, selectedVariable) => {
     var freqMap = [];
@@ -129,7 +144,7 @@ var renderGraph = (svg, selections, onSelect) => {
     const barGroup = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    const myColors = ["#ff7b7b","#cb1c1e","#a70000","#7f1010"];
+    const myColors = ["#ff7b7b", "#cb1c1e", "#a70000", "#7f1010"];
     const color = d3.scaleOrdinal()
         .domain(ROOM_TYPES)
         .range(myColors);
@@ -166,15 +181,6 @@ var renderGraph = (svg, selections, onSelect) => {
         .on("mouseover", function (e, d) {
             console.log(d.data);
             tooltip.style("opacity", 1);
-            // tooltip.html(
-            //     ReactDomServer.renderToString(
-            //         <div style={{ width: "150px", height: "auto", display: "flex", justifyContent: "center" }}>
-            //             {d.data.roomType}
-            //             <br />
-            //             {d.data[d.data.roomType]} ({((d.data[d.data.roomType] * 100 / ROOM_TYPES.map(roomType => d.data[roomType]).reduce((x,y)=>x+y,0)).toFixed(2))}%)
-            //         </div>
-            //     )
-            // );
             tooltip.html(
                 ReactDomServer.renderToString(
                     <div style={{
@@ -192,7 +198,6 @@ var renderGraph = (svg, selections, onSelect) => {
                         fontSize: "14px",
                         fontFamily: "Arial, sans-serif",
                         lineHeight: "1.4em",
-                        textTransform: "uppercase",
                     }}>
                         <div style={{
                             marginBottom: "10px",
@@ -200,7 +205,7 @@ var renderGraph = (svg, selections, onSelect) => {
                             fontSize: "18px",
                             textShadow: "1px 1px #000000",
                         }}>
-                            {d.data.roomType}
+                            {roomTypeStringRep(d.data.roomType)}
                         </div>
                         <div style={{
                             textAlign: "center",
@@ -213,8 +218,8 @@ var renderGraph = (svg, selections, onSelect) => {
                     </div>
                 )
             );
-            
-            
+
+
 
             tooltip.style("left", e.x + 40 + "px")
                 .style("top", e.y + 40 + "px");
@@ -234,6 +239,46 @@ var renderGraph = (svg, selections, onSelect) => {
         }).on("click", function (e, d) {
             onSelect(d.data);
         });
+    const legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(${margin.left + 250}, ${margin.top + 10})`);
+      
+      legend.selectAll("rect")
+        .data(ROOM_TYPES)
+        .enter()
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 25 + 10) // adjust y-coordinate
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", d => color(d))
+        .style("stroke", "#ffffff")
+        .style("stroke-width", "1px");
+      
+      legend.selectAll("text")
+        .data(ROOM_TYPES)
+        .enter()
+        .append("text")
+        .attr("x", 30)
+        .attr("y", (d, i) => i * 25 + 25)
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .style("fill", "#ffffff")
+        .style("text-shadow", "1px 1px #000000")
+        .text(d => roomTypeStringRep(d));
+      
+      // Add a background rectangle for the legend
+      legend.insert("rect", ":first-child")
+        .attr("x", -5)
+        .attr("y", -5)
+        .attr("width", 160)
+        .attr("height", ROOM_TYPES.length * 25 + 25)
+        .attr("fill", "#4B5A5E")
+        .style("opacity", 0.87)
+        .style("stroke", "#ffffff")
+        .style("stroke-width", "2px");
+
+
 };
 
 const BarGraph = ({ onSelect = () => undefined }) => {

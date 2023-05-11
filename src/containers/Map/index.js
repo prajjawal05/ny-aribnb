@@ -123,7 +123,6 @@ const renderMapSvg = (selectedRgns, onSelect) => {
                         fontSize: "14px",
                         fontFamily: "Arial, sans-serif",
                         lineHeight: "1.4em",
-                        textTransform: "uppercase",
                     }}>
                         <div style={{
                             marginBottom: "10px",
