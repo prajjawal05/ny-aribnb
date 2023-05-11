@@ -186,7 +186,6 @@ var renderGraph = (svg, data, selections, onSelect) => {
         .style("stroke", "#ffffff")
         .style("stroke-width", "1px")
         .on("mouseover", function (e, d) {
-            console.log(d.data);
             tooltip.style("opacity", 1);
             tooltip.html(
                 ReactDomServer.renderToString(

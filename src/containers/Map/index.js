@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import ReactDomServer from 'react-dom/server';
+import { ThreeCircles } from 'react-loader-spinner'
 
 import { getData } from "../../api";
 
@@ -24,7 +25,6 @@ const getBoroughDataFromMap = d => d.properties.boro_code;
 
 const assignOrderForFreqMap = boroFreq => {
     const entries = Object.entries(boroFreq);
-    // console.log(entries);
     entries.sort((a, b) => a[1] - b[1]);
     for (let i = 1; i <= entries.length; i++) {
         entries[i - 1][1] = i;
@@ -131,7 +131,6 @@ const renderMapSvg = (svg, boroFreq, selectedRgns, onSelect) => {
             tooltip.style("left", event.x + 40 + "px")
                 .style("top", event.y + 40 + "px");
 
-            console.log(boroFreq[getBoroughDataFromMap(d)]);
             if (!boroFreq[getBoroughDataFromMap(d)]) {
                 d3.select(this)
                     .style("fill", EMPTY_COLOR);
