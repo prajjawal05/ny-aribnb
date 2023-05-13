@@ -1,7 +1,7 @@
 ### Setup
 
 1. `npm i`
-2. clone git@github.com:prajjawal05/ny-airbnb-svc.git
+2. clone `git@github.com:prajjawal05/ny-airbnb-svc.git`
 
 ### Steps to Run
 
